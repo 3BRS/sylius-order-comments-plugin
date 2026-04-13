@@ -1,0 +1,8 @@
+payum:
+    security:
+        token_storage:
+            Sylius\Bundle\PayumBundle\Model\PaymentSecurityToken:
+                doctrine: orm
+    gateways:
+        offline:
+            factory: offline

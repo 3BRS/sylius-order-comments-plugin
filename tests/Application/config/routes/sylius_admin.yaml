@@ -3,5 +3,5 @@ sylius_admin:
     prefix: /admin
 
 mango_sylius_order_comments_plugin:
-  resource: "@MangoSyliusOrderCommentsPlugin/Resources/config/routing.yml"
+  resource: "@MangoSyliusOrderCommentsPlugin/config/routing.yml"
   prefix: /admin

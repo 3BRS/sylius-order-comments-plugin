@@ -6,20 +6,12 @@
         "watch": "encore dev --watch"
     },
     "dependencies": {
-        "chart.js": "^4.0.0",
-        "jquery": "^3.6.0",
-        "jquery.dirtyforms": "^2.0.0",
-        "lightbox2": "^2.11.0",
-        "semantic-ui-css": "^2.4.0",
-        "slick-carousel": "^1.8.0"
+        "@sylius-ui/admin": "file:../../vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle",
+        "@sylius-ui/shop": "file:../../vendor/sylius/sylius/src/Sylius/Bundle/ShopBundle",
+        "@symfony/ux-autocomplete": "file:../../vendor/symfony/ux-autocomplete/assets",
+        "@symfony/ux-live-component": "file:../../vendor/symfony/ux-live-component/assets"
     },
     "devDependencies": {
-        "@babel/core": "^7.17.0",
-        "@babel/preset-env": "^7.16.0",
-        "@symfony/webpack-encore": "^4.0.0",
-        "sass": "^1.49.0",
-        "sass-loader": "^13.0.0",
-        "webpack": "^5.74.0",
-        "webpack-cli": "^5.0.0"
+        "@symfony/webpack-encore": "^4.0.0 || ^5.0.0"
     }
 }

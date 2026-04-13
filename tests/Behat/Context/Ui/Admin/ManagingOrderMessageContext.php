@@ -55,6 +55,14 @@ final class ManagingOrderMessageContext implements Context
     }
 
     /**
+     * @Then the email to :recipient should contain the message text
+     */
+    public function theEmailShouldContainTheMessageText(string $recipient): void
+    {
+        Assert::true($this->emailChecker->hasMessageTo('Some message', $recipient));
+    }
+
+    /**
      * @Then the note generated should not be sent to :recipient
      */
     public function anEmailGeneratedForOrderShouldNotBeSentTo(string $recipient): void
@@ -85,10 +93,10 @@ final class ManagingOrderMessageContext implements Context
     }
 
     /**
-     * @Then I see list of messages sended to the customer
+     * @Then I see list of messages sent to the customer
      * @Then I see the note created
      */
-    public function iSeeListOfMessagesSendedToTheCustomer(): void
+    public function iSeeListOfMessagesSentToTheCustomer(): void
     {
         $this->showPage->showMessage();
     }

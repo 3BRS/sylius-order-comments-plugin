@@ -1,0 +1,15 @@
+mango_sylius:
+    orderMessage:
+        title: 'Komentarz do zamówienia'
+        sendMail: 'Wyślij do klienta'
+        subject: 'Wiadomość dotycząca zamówienia nr %orderNumber%'
+        success:
+            mail: 'Wiadomość została wysłana do klienta'
+            note: 'Wiadomość została zapisana'
+        error: 'Wiadomość, którą próbujesz wysłać, jest pusta'
+        time: 'O'
+        sender: 'Od:'
+        message: 'Wiadomość:'
+        note: 'Notatka:'
+        sent: 'Wysłano do klienta'
+        save: 'Zapisz'

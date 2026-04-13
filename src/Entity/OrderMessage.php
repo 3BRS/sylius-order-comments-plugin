@@ -9,56 +9,32 @@ use Sylius\Component\Core\Model\AdminUserInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="mangoweb_order_message")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'mangoweb_order_message')]
 class OrderMessage implements OrderMessageInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    protected ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     *
-     * @var string|null
-     * @Assert\NotBlank
-     */
-    protected $message;
+    #[ORM\Column(type: 'string', nullable: false)]
+    #[Assert\NotBlank]
+    protected ?string $message = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     *
-     * @var \DateTime|null
-     */
-    protected $sendTime;
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    protected ?\DateTime $sendTime = null;
 
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $sendMail = false;
+    #[ORM\Column(type: 'boolean')]
+    protected bool $sendMail = false;
 
-    /**
-     * @var OrderInterface|null
-     * @ORM\ManyToOne(targetEntity="Sylius\Component\Order\Model\OrderInterface")
-     */
-    protected $order;
+    #[ORM\ManyToOne(targetEntity: \Sylius\Component\Order\Model\OrderInterface::class)]
+    protected ?OrderInterface $order = null;
 
-    /**
-     * @var AdminUserInterface|null
-     * @ORM\ManyToOne(targetEntity="Sylius\Component\Core\Model\AdminUserInterface")
-     */
-    protected $sender;
+    #[ORM\ManyToOne(targetEntity: \Sylius\Component\Core\Model\AdminUserInterface::class)]
+    protected ?AdminUserInterface $sender = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

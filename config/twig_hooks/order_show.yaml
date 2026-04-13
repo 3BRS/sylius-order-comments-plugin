@@ -1,0 +1,6 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.order.show.content.sections#left':
+            order_comments:
+                template: '@MangoSyliusOrderCommentsPlugin/Admin/order_comments.html.twig'
+                priority: -100

@@ -1,12 +1,21 @@
 # Changelog
 
+## Branch `2.0` — Sylius 2.0–2.2
+
+- Require PHP ^8.2, Symfony ^6.4|^7.4, Sylius ^2.0
+- Drop support for Sylius <2.0, PHP <8.2
+- **BREAKING**: Config import path changed from `@MangoSyliusOrderCommentsPlugin/Resources/config/config.yml` to `@MangoSyliusOrderCommentsPlugin/config/config.yml`
+- **BREAKING**: Routing import path changed from `@MangoSyliusOrderCommentsPlugin/Resources/config/routing.yml` to `@MangoSyliusOrderCommentsPlugin/config/routing.yml`
+- Order comments form is now automatically added to the admin order page via Twig Hooks (no manual template override needed)
+- Convert Doctrine annotations to PHP 8 attributes
+- Moved `mailer.yml` config from `src/Resources/config/` to `config/` (loaded automatically via `config.yml` imports)
+
 ## Branch `1.14` — Sylius 1.12–1.14
 
 - Require PHP ^8.1, Symfony ^6.4
 - Drop support for Sylius <1.12, PHP <8.1, Symfony <6.4
 - Replace FlashBag injection with RequestStack (Symfony 6.4 compatibility)
 - Switch from Gulp to Webpack Encore for asset building
-- Fix controller routing to use `::` notation (Symfony 6.4)
 
 ## Branch `1.11` — Sylius 1.10–1.11
 

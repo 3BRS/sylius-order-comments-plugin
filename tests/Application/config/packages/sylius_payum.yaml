@@ -1,0 +1,5 @@
+sylius_payment:
+    resources:
+        gateway_config:
+            classes:
+                model: Sylius\Bundle\PayumBundle\Model\GatewayConfig

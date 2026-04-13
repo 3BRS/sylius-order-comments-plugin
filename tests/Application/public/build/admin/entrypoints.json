@@ -7,6 +7,11 @@
       "js": [
         "/build/admin/admin-entry.js"
       ]
+    },
+    "admin-product-entry": {
+      "js": [
+        "/build/admin/admin-product-entry.js"
+      ]
     }
   }
 }

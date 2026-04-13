@@ -35,5 +35,6 @@ Feature: Save order note
     And I check the checkbox "mango_sylius_order_message_sendMail"
     And I send the order message
     Then an email generated for order "00000001" should be sent to "sylius@mangoweb.cz"
+    And the email to "sylius@mangoweb.cz" should contain the message text
     And I should be notified that the email was sent successfully
-    And I see list of messages sended to the customer
+    And I see list of messages sent to the customer

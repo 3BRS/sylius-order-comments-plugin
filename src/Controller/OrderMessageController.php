@@ -24,44 +24,17 @@ use Twig\Environment;
 
 class OrderMessageController
 {
-    private TranslatorInterface $translator;
-
-    private Environment $twig;
-
-    private OrderRepositoryInterface $orderRepository;
-
-    private SenderInterface $mailer;
-
-    private RouterInterface $router;
-
-    private RequestStack $requestStack;
-
-    private FormFactoryInterface $builder;
-
-    private TokenStorageInterface $token;
-
-    private RepositoryInterface $orderMessageRepository;
-
     public function __construct(
-        TranslatorInterface $translator,
-        Environment $twig,
-        OrderRepositoryInterface $orderRepository,
-        SenderInterface $mailer,
-        RouterInterface $router,
-        RequestStack $requestStack,
-        FormFactoryInterface $builder,
-        TokenStorageInterface $tokenStorage,
-        RepositoryInterface $orderMessageRepository
+        private readonly TranslatorInterface $translator,
+        private readonly Environment $twig,
+        private readonly OrderRepositoryInterface $orderRepository,
+        private readonly SenderInterface $mailer,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly FormFactoryInterface $builder,
+        private readonly TokenStorageInterface $token,
+        private readonly RepositoryInterface $orderMessageRepository,
     ) {
-        $this->translator = $translator;
-        $this->twig = $twig;
-        $this->orderRepository = $orderRepository;
-        $this->mailer = $mailer;
-        $this->router = $router;
-        $this->requestStack = $requestStack;
-        $this->builder = $builder;
-        $this->token = $tokenStorage;
-        $this->orderMessageRepository = $orderMessageRepository;
     }
 
     public function save(Request $request, int $orderId): Response
@@ -81,9 +54,9 @@ class OrderMessageController
                 assert($order instanceof OrderInterface);
                 $orderMessage->setOrder($order);
 
-                $token = $this->token->getToken();
-                assert($token !== null);
-                $sender = $token->getUser();
+                $tokenObj = $this->token->getToken();
+                assert($tokenObj !== null);
+                $sender = $tokenObj->getUser();
                 assert($sender instanceof AdminUserInterface);
                 $orderMessage->setSender($sender);
                 $orderMessage->setSendTime(new \DateTime());
