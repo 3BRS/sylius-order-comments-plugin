@@ -8,6 +8,7 @@ services:
             DATABASE_URL: "mysql://root:mysql@mysql/sylius_%kernel.environment%?charset=utf8mb4"
             MAILER_URL: "null://localhost"
             SYLIUS_API_AUTHORIZATION_HEADER: "Authorization"
+            MESSENGER_TRANSPORT_DSN: "in-memory://"
             PHP_DATE_TIMEZONE: "Europe/Prague"
             COMPOSER_HOME: "/tmp"
             YARN_CACHE_FOLDER: "/tmp"

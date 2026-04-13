@@ -1,6 +1,6 @@
 FROM node:14-alpine AS node
 
-FROM php:7.4-fpm-alpine
+FROM php:8.0-fpm-alpine
 
 RUN apk add --no-cache \
     bash \
