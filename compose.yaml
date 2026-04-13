@@ -1,0 +1,35 @@
+services:
+    php:
+        build: ./.docker/php
+        working_dir: /srv/sylius
+        environment:
+            APP_ENV: "test"
+            APP_SECRET: "ch4mb3r0f5ecr3ts"
+            DATABASE_URL: "mysql://root:mysql@mysql/sylius_%kernel.environment%?charset=utf8mb4"
+            MAILER_URL: "null://localhost"
+            SYLIUS_API_AUTHORIZATION_HEADER: "Authorization"
+            PHP_DATE_TIMEZONE: "Europe/Prague"
+            COMPOSER_HOME: "/tmp"
+            YARN_CACHE_FOLDER: "/tmp"
+            HOME: "/tmp"
+        volumes:
+            - ./:/srv/sylius:delegated
+        depends_on:
+            - mysql
+
+    nginx:
+        build: ./.docker/nginx
+        depends_on:
+            - php
+        volumes:
+            - ./:/srv/sylius:delegated
+        ports:
+            - "${APP_HOST_MAPPING_PORT:-8080}:80"
+
+    mysql:
+        image: mysql:8.0
+        platform: linux/amd64
+        environment:
+            MYSQL_ROOT_PASSWORD: mysql
+        ports:
+            - "${MYSQL_HOST_MAPPING_PORT:-0}:3306"

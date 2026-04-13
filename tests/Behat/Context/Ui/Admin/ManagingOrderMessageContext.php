@@ -90,7 +90,7 @@ final class ManagingOrderMessageContext implements Context
     public function iShouldBeNotifiedThatTheNoteAsBeenCreated()
     {
         $this->notificationChecker->checkNotification(
-            'The note has been save',
+            'The message has been saved',
             NotificationType::success()
         );
     }
