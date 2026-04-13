@@ -15,8 +15,8 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -24,33 +24,23 @@ use Twig\Environment;
 
 class OrderMessageController
 {
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-	/** @var Environment */
-	private $twig;
+    private Environment $twig;
 
-    /** @var OrderRepositoryInterface */
-    private $orderRepository;
+    private OrderRepositoryInterface $orderRepository;
 
-    /** @var SenderInterface */
-    private $mailer;
+    private SenderInterface $mailer;
 
-    /** @var RouterInterface */
-    private $router;
+    private RouterInterface $router;
 
-    /** @var FlashBagInterface */
-    private $flashBag;
+    private RequestStack $requestStack;
 
-    /** @var FormFactoryInterface */
-    private $builder;
+    private FormFactoryInterface $builder;
 
-    /** @var TokenStorageInterface */
-    private $token;
-    /**
-     * @var RepositoryInterface
-     */
-    private $orderMessageRepository;
+    private TokenStorageInterface $token;
+
+    private RepositoryInterface $orderMessageRepository;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -58,7 +48,7 @@ class OrderMessageController
         OrderRepositoryInterface $orderRepository,
         SenderInterface $mailer,
         RouterInterface $router,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         FormFactoryInterface $builder,
         TokenStorageInterface $tokenStorage,
         RepositoryInterface $orderMessageRepository
@@ -68,7 +58,7 @@ class OrderMessageController
         $this->orderRepository = $orderRepository;
         $this->mailer = $mailer;
         $this->router = $router;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->builder = $builder;
         $this->token = $tokenStorage;
         $this->orderMessageRepository = $orderMessageRepository;
@@ -104,12 +94,12 @@ class OrderMessageController
                 if ($orderMessage->isSendMail()) {
                     assert($customer instanceof CustomerInterface);
                     $this->mailer->send('order_mail', [$customer->getEmail()], ['orderMessage' => $orderMessage]);
-                    $this->flashBag->add('success', $this->translator->trans('mango_sylius.orderMessage.success.mail'));
+                    $this->addFlash('success', $this->translator->trans('mango_sylius.orderMessage.success.mail'));
                 } else {
-                    $this->flashBag->add('success', $this->translator->trans('mango_sylius.orderMessage.success.note'));
+                    $this->addFlash('success', $this->translator->trans('mango_sylius.orderMessage.success.note'));
                 }
             } else {
-                $this->flashBag->add('error', $this->translator->trans('mango_sylius.orderMessage.error'));
+                $this->addFlash('error', $this->translator->trans('mango_sylius.orderMessage.error'));
             }
 
             return new RedirectResponse($this->router->generate('sylius_admin_order_show', ['id' => $orderId]));
@@ -120,12 +110,19 @@ class OrderMessageController
         ]));
     }
 
-    public function show(int $orderId)
+    public function show(int $orderId): Response
     {
         $orderMessages = $this->orderMessageRepository->findBy(['order' => $orderId]);
 
         return new Response($this->twig->render('@MangoSyliusOrderCommentsPlugin/Admin/_show.html.twig', [
             'messages' => $orderMessages,
         ]));
+    }
+
+    private function addFlash(string $type, string $message): void
+    {
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $this->requestStack->getSession();
+        $session->getFlashBag()->add($type, $message);
     }
 }

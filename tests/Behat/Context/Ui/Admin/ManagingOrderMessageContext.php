@@ -6,26 +6,18 @@ namespace Tests\MangoSylius\OrderCommentsPlugin\Behat\Context\Ui\Admin;
 
 use Behat\Behat\Context\Context;
 use Sylius\Behat\NotificationType;
+use Sylius\Behat\Service\Checker\EmailCheckerInterface;
 use Sylius\Behat\Service\NotificationCheckerInterface;
-use Sylius\Component\Core\Test\Services\EmailCheckerInterface;
-use Symfony\Component\Finder\Finder;
 use Tests\MangoSylius\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPageInterface;
 use Webmozart\Assert\Assert;
 
 final class ManagingOrderMessageContext implements Context
 {
-    /**
-     * @var ShowPageInterface
-     */
-    private $showPage;
-    /**
-     * @var NotificationCheckerInterface
-     */
-    private $notificationChecker;
-    /**
-     * @var EmailCheckerInterface
-     */
-    private $emailChecker;
+    private ShowPageInterface $showPage;
+
+    private NotificationCheckerInterface $notificationChecker;
+
+    private EmailCheckerInterface $emailChecker;
 
     public function __construct(
         ShowPageInterface $showPage,
@@ -40,7 +32,7 @@ final class ManagingOrderMessageContext implements Context
     /**
      * @When I write a message
      */
-    public function iWriteAMessage()
+    public function iWriteAMessage(): void
     {
         $this->showPage->addMessage();
     }
@@ -55,22 +47,19 @@ final class ManagingOrderMessageContext implements Context
     }
 
     /**
-     * @Then an email generated for order :arg1 should be sent to :arg2
+     * @Then an email generated for order :orderNumber should be sent to :recipient
      */
-    public function anEmailGeneratedForOrderShouldBeSentTo(string $arg1, string $arg2): void
+    public function anEmailGeneratedForOrderShouldBeSentTo(string $orderNumber, string $recipient): void
     {
-        Assert::true($this->emailChecker->hasMessageTo('Message regarding your order No.' . $arg1, $arg2));
+        Assert::true($this->emailChecker->hasMessageTo('Message regarding your order No.' . $orderNumber, $recipient));
     }
 
     /**
-     * @Then the note generated should not be sent to :arg1
+     * @Then the note generated should not be sent to :recipient
      */
-    public function anEmailGeneratedForOrderShouldNotBeSentTo(string $arg1): void
+    public function anEmailGeneratedForOrderShouldNotBeSentTo(string $recipient): void
     {
-        $mailD = $this->emailChecker->getSpoolDirectory();
-        $finder = new Finder();
-        $finder->files()->name('*.message')->in($mailD);
-        Assert::eq($finder->count(), 0, sprintf('message files found in %s.', $mailD));
+        Assert::false($this->emailChecker->hasRecipient($recipient));
     }
 
     /**
@@ -87,7 +76,7 @@ final class ManagingOrderMessageContext implements Context
     /**
      * @Then I should be notified that the note as been created
      */
-    public function iShouldBeNotifiedThatTheNoteAsBeenCreated()
+    public function iShouldBeNotifiedThatTheNoteAsBeenCreated(): void
     {
         $this->notificationChecker->checkNotification(
             'The message has been saved',
@@ -99,24 +88,24 @@ final class ManagingOrderMessageContext implements Context
      * @Then I see list of messages sended to the customer
      * @Then I see the note created
      */
-    public function iSeeListOfMessagesSendedToTheCustomer()
+    public function iSeeListOfMessagesSendedToTheCustomer(): void
     {
         $this->showPage->showMessage();
     }
 
     /**
-     * @When I check the checkbox :arg1
+     * @When I check the checkbox :checkbox
      */
-    public function iCheckTheCheckbox($arg1)
+    public function iCheckTheCheckbox(string $checkbox): void
     {
-        $this->showPage->checkOption($arg1);
+        $this->showPage->checkOption($checkbox);
     }
 
     /**
-     * @When I uncheck the checkbox :arg1
+     * @When I uncheck the checkbox :checkbox
      */
-    public function iUncheckTheCheckbox($arg1)
+    public function iUncheckTheCheckbox(string $checkbox): void
     {
-        $this->showPage->uncheckOption($arg1);
+        $this->showPage->uncheckOption($checkbox);
     }
 }

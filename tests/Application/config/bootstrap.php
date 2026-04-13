@@ -18,4 +18,10 @@ $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'
 $_SERVER['APP_DEBUG'] = $_SERVER['APP_DEBUG'] ?? $_ENV['APP_DEBUG'] ?? 'prod' !== $_SERVER['APP_ENV'];
 $_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = (int) $_SERVER['APP_DEBUG'] || filter_var($_SERVER['APP_DEBUG'], FILTER_VALIDATE_BOOLEAN) ? '1' : '0';
 
-ini_set('memory_limit', '256M');
+ini_set('memory_limit', '512M');
+
+if ('test' === $_SERVER['APP_ENV']) {
+    // Suppress PHP 8.3+ deprecations from twig/intl-extra that cannot be fixed without
+    // upgrading beyond the versions that Sylius 1.x allows.
+    error_reporting(error_reporting() & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+}

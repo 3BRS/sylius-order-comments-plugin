@@ -14,8 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 final class OrderMessageTypeTest extends TestCase
 {
-    /** @var OrderMessageType */
-    private $formType;
+    private OrderMessageType $formType;
 
     protected function setUp(): void
     {
@@ -30,21 +29,29 @@ final class OrderMessageTypeTest extends TestCase
     public function testBuildFormAddsExpectedFields(): void
     {
         $builder = $this->createMock(FormBuilderInterface::class);
+
+        $addedFields = [];
         $builder->expects(self::exactly(3))
             ->method('add')
-            ->withConsecutive(
-                ['message', TextareaType::class, self::callback(function (array $options): bool {
-                    return $options['label'] === false && $options['required'] === true;
-                })],
-                ['sendMail', CheckboxType::class, self::callback(function (array $options): bool {
-                    return $options['label'] === 'mango_sylius.orderMessage.sendMail' && $options['required'] === false;
-                })],
-                ['save', SubmitType::class, self::callback(function (array $options): bool {
-                    return $options['label'] === 'mango_sylius.orderMessage.save';
-                })]
-            )
-            ->willReturnSelf();
+            ->willReturnCallback(function (string $name, string $type, array $options) use ($builder, &$addedFields) {
+                $addedFields[] = ['name' => $name, 'type' => $type, 'options' => $options];
+
+                return $builder;
+            });
 
         $this->formType->buildForm($builder, []);
+
+        self::assertSame('message', $addedFields[0]['name']);
+        self::assertSame(TextareaType::class, $addedFields[0]['type']);
+        self::assertFalse($addedFields[0]['options']['label']);
+        self::assertTrue($addedFields[0]['options']['required']);
+
+        self::assertSame('sendMail', $addedFields[1]['name']);
+        self::assertSame(CheckboxType::class, $addedFields[1]['type']);
+        self::assertSame('mango_sylius.orderMessage.sendMail', $addedFields[1]['options']['label']);
+
+        self::assertSame('save', $addedFields[2]['name']);
+        self::assertSame(SubmitType::class, $addedFields[2]['type']);
+        self::assertSame('mango_sylius.orderMessage.save', $addedFields[2]['options']['label']);
     }
 }
