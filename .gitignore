@@ -5,12 +5,21 @@
 /etc/build/*
 !/etc/build/.gitkeep
 
+/yarn.lock
 /tests/Application/yarn.lock
 
-docker-compose.override.yaml
-docker-compose.override.dist.yaml
-docker-compose.yaml
-/bin-docker/
+/compose.override.yaml
 /deploy/
-/docker/
-/etc/
+/etc
+
+/yarn-error.log
+/.envrc
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> lexik/jwt-authentication-bundle ###
+/tests/Application/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
