@@ -18,8 +18,8 @@ init:
 	./bin-docker/php ./bin/console doctrine:database:create --no-interaction --if-not-exists
 	./bin-docker/php ./bin/console doctrine:schema:create --no-interaction || ./bin-docker/php ./bin/console doctrine:schema:update --force --no-interaction
 	./bin-docker/php ./bin/console assets:install
-	./bin-docker/yarn --cwd=tests/Application install --pure-lockfile
-	GULP_ENV=prod ./bin-docker/yarn --cwd=tests/Application build
+	./bin-docker/yarn --cwd=tests/Application install
+	./bin-docker/yarn --cwd=tests/Application build
 	@make var
 
 init-tests:
@@ -36,8 +36,8 @@ init-tests:
 	./bin-docker/php ./bin/console --env=test doctrine:database:create --no-interaction --if-not-exists
 	./bin-docker/php ./bin/console --env=test doctrine:schema:create --no-interaction || ./bin-docker/php ./bin/console --env=test doctrine:schema:update --force --no-interaction
 	./bin-docker/php ./bin/console --env=test assets:install
-	./bin-docker/yarn --cwd=tests/Application install --pure-lockfile
-	GULP_ENV=prod ./bin-docker/yarn --cwd=tests/Application build
+	./bin-docker/yarn --cwd=tests/Application install
+	./bin-docker/yarn --cwd=tests/Application build
 	@make var
 
 cache:
@@ -73,8 +73,8 @@ composer-lint:
 lint: symfony-lint composer-lint
 
 yarn-build:
-	./bin-docker/yarn --cwd=tests/Application install --pure-lockfile
-	GULP_ENV=prod ./bin-docker/yarn --cwd=tests/Application build
+	./bin-docker/yarn --cwd=tests/Application install
+	./bin-docker/yarn --cwd=tests/Application build
 
 yarn: yarn-build
 

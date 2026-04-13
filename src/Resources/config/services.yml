@@ -15,7 +15,7 @@ services:
             - 'controller.service_arguments'
         arguments:
             $router: '@router'
-            $flashBag: '@session.flash_bag'
+            $requestStack: '@request_stack'
             $translator: '@translator'
             $mailer: '@sylius.email_sender'
             $twig: '@twig'

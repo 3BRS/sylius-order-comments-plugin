@@ -8,7 +8,7 @@ security:
             id: sylius.admin_user_provider.email_or_name_based
         sylius_shop_user_provider:
             id: sylius.shop_user_provider.email_or_name_based
-    encoders:
+    password_hashers:
         Sylius\Component\User\Model\UserInterface: sha512
     firewalls:
         admin:
@@ -24,7 +24,7 @@ security:
                 default_target_path: sylius_admin_dashboard
                 use_forward: false
                 use_referer: true
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 csrf_parameter: _csrf_admin_security_token
                 csrf_token_id: admin_authenticate
             remember_me:
@@ -36,7 +36,6 @@ security:
             logout:
                 path: sylius_admin_logout
                 target: sylius_admin_login
-            anonymous: true
 
         shop:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH }
@@ -53,7 +52,7 @@ security:
                 default_target_path: sylius_shop_homepage
                 use_forward: false
                 use_referer: true
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 csrf_parameter: _csrf_shop_security_token
                 csrf_token_id: shop_authenticate
             remember_me:
@@ -65,8 +64,6 @@ security:
                 path: sylius_shop_logout
                 target: sylius_shop_login
                 invalidate_session: false
-                success_handler: sylius.handler.shop_user_logout
-            anonymous: true
 
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/

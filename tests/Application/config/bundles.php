@@ -31,10 +31,6 @@ $bundles = [
     Sylius\Bundle\ResourceBundle\SyliusResourceBundle::class => ['all' => true],
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
     winzou\Bundle\StateMachineBundle\winzouStateMachineBundle::class => ['all' => true],
-    Sonata\BlockBundle\SonataBlockBundle::class => ['all' => true],
-    Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle::class => ['all' => true],
-    JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
-    FOS\RestBundle\FOSRestBundle::class => ['all' => true],
     Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class => ['all' => true],
     Knp\Bundle\MenuBundle\KnpMenuBundle::class => ['all' => true],
     Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
@@ -46,27 +42,28 @@ $bundles = [
     Sylius\Bundle\ThemeBundle\SyliusThemeBundle::class => ['all' => true],
     Sylius\Bundle\AdminBundle\SyliusAdminBundle::class => ['all' => true],
     Sylius\Bundle\ShopBundle\SyliusShopBundle::class => ['all' => true],
-    // FOSOAuthServerBundle and SyliusAdminApiBundle removed — broken with newer Doctrine
-    // (Doctrine\Common\Persistence\ObjectManager no longer exists)
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true, 'test_cached' => true],
     FriendsOfBehat\SymfonyExtension\Bundle\FriendsOfBehatSymfonyExtensionBundle::class => ['test' => true, 'test_cached' => true],
     MangoSylius\OrderCommentsPlugin\MangoSyliusOrderCommentsPlugin::class => ['all' => true],
 ];
 
-// Conditionally load bundles that may not be present in all supported Sylius versions
+// Conditionally load bundles that may or may not be present depending on Sylius version
 $optionalBundles = [
-    Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class,
-    Symfony\Bundle\WebServerBundle\WebServerBundle::class,
-    WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle::class,
     BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class,
     ApiPlatform\Core\Bridge\Symfony\Bundle\ApiPlatformBundle::class,
     Sylius\Bundle\ApiBundle\SyliusApiBundle::class,
     Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class,
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class,
     Sylius\Calendar\SyliusCalendarBundle::class,
-    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class,
     League\FlysystemBundle\FlysystemBundle::class,
+    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class,
+    Sonata\BlockBundle\SonataBlockBundle::class,
+    Bazinga\Bundle\HateoasBundle\BazingaHateoasBundle::class,
+    JMS\SerializerBundle\JMSSerializerBundle::class,
+    FOS\RestBundle\FOSRestBundle::class,
+    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class,
+    Sylius\Abstraction\StateMachine\SyliusStateMachineAbstractionBundle::class,
 ];
 foreach ($optionalBundles as $bundleClass) {
     if (class_exists($bundleClass)) {

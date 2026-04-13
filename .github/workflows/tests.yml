@@ -10,9 +10,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                sylius_version: [ "1.10", "1.11" ]
-                php_version: [ "8.0", "8.1" ]
-                symfony_version: [ "5.4" ]
+                sylius_version: [ "1.12", "1.13", "1.14" ]
+                php_version: [ "8.1", "8.2", "8.3" ]
+                symfony_version: [ "6.4" ]
 
         name: PHP ${{ matrix.php_version }} - Sylius ${{ matrix.sylius_version }} - Symfony ${{ matrix.symfony_version }}
 
@@ -50,7 +50,7 @@ jobs:
             -   name: Setup Node
                 uses: actions/setup-node@v4
                 with:
-                    node-version: '14'
+                    node-version: '20'
 
             -   name: Install Yarn
                 run: npm install -g yarn
@@ -71,7 +71,7 @@ jobs:
                 run: yarn --cwd tests/Application install
 
             -   name: Yarn build
-                run: GULP_ENV=prod yarn --cwd tests/Application build
+                run: yarn --cwd tests/Application build
 
             -   name: Create database
                 run: (cd tests/Application && bin/console doctrine:database:create --if-not-exists --env=test -vvv)
@@ -114,7 +114,7 @@ jobs:
                 run: yarn --cwd tests/Application install
 
             -   name: Yarn build (prefer-lowest)
-                run: GULP_ENV=prod yarn --cwd tests/Application build
+                run: yarn --cwd tests/Application build
 
             -   name: Drop database (prefer-lowest)
                 run: (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)

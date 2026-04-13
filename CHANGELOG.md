@@ -1,5 +1,13 @@
 # Changelog
 
+## Branch `1.14` — Sylius 1.12–1.14
+
+- Require PHP ^8.1, Symfony ^6.4
+- Drop support for Sylius <1.12, PHP <8.1, Symfony <6.4
+- Replace FlashBag injection with RequestStack (Symfony 6.4 compatibility)
+- Switch from Gulp to Webpack Encore for asset building
+- Fix controller routing to use `::` notation (Symfony 6.4)
+
 ## Branch `1.11` — Sylius 1.10–1.11
 
 - Require PHP ^8.0, Symfony ^5.4
