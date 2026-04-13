@@ -10,7 +10,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                sylius_version: [ "2.0" ]
+                sylius_version: [ "2.0", "2.1", "2.2" ]
                 php_version: [ "8.2", "8.3" ]
                 symfony_version: [ "6.4", "7.4" ]
 
@@ -59,7 +59,7 @@ jobs:
             -   name: Require specific Sylius and Symfony version
                 run: |
                     composer require "sylius/sylius:${{ matrix.sylius_version }}.*" --no-interaction --no-update --no-scripts
-                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/type-info)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
+                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/web-server-bundle)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
 
             # PREFER DIST
             -   name: Composer install (prefer-dist)
@@ -103,14 +103,17 @@ jobs:
                     vendor/bin/behat --no-interaction
 
             # PREFER LOWEST
+            -   name: Reset database (before prefer-lowest)
+                run: |
+                    (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)
+                    (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
+                    (cd tests/Application && bin/console doctrine:schema:update --force --env=test -vvv)
+
             -   name: Remove lock file
                 run: rm -f composer.lock
 
             -   name: Composer install (prefer-lowest)
                 run: composer update --no-interaction --prefer-lowest --no-plugins
-
-            -   name: Clear cache after composer update (prefer-lowest)
-                run: rm -fr tests/Application/var/cache
 
             -   name: Install assets (prefer-lowest)
                 run: (cd tests/Application && bin/console assets:install --env=test -vvv)
@@ -130,8 +133,10 @@ jobs:
             -   name: Create schema (prefer-lowest)
                 run: (cd tests/Application && bin/console doctrine:schema:update --force --env=test -vvv)
 
-            -   name: Cache warmup (prefer-lowest)
-                run: (cd tests/Application && bin/console cache:warmup --env=test -vvv)
+            -   name: Clear cache (prefer-lowest)
+                run: |
+                    rm -fr tests/Application/var/cache
+                    (cd tests/Application && bin/console cache:warmup --env=test -vvv)
 
             -   name: Run PHPStan (prefer-lowest)
                 run: bin/phpstan.sh
@@ -139,12 +144,5 @@ jobs:
             -   name: Run PHPUnit (prefer-lowest)
                 run: vendor/bin/phpunit
 
-            -   name: Clear cache before Behat (prefer-lowest)
-                run: |
-                    rm -fr tests/Application/var/cache
-                    (cd tests/Application && bin/console cache:warmup --env=test -vvv)
-
             -   name: Run Behat (prefer-lowest)
-                run: |
-                    mkdir -p tests/Application/public/media/image etc/build
-                    vendor/bin/behat --no-interaction
+                run: vendor/bin/behat --no-interaction
