@@ -1,0 +1,15 @@
+mango_sylius:
+    orderMessage:
+        title: 'Commentaire de commande'
+        sendMail: 'Envoyer au client'
+        subject: 'Message concernant votre commande n°%orderNumber%'
+        success:
+            mail: 'Le message a été envoyé au client'
+            note: 'Le message a été enregistré'
+        error: 'Le message que vous essayez d''envoyer est vide'
+        time: 'À'
+        sender: 'De :'
+        message: 'Message :'
+        note: 'Note :'
+        sent: 'Envoyé au client'
+        save: 'Enregistrer'

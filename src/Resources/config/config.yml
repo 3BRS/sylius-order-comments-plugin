@@ -1,4 +1,0 @@
-imports:
-    - { resource: "@MangoSyliusOrderCommentsPlugin/Resources/config/resources.yml" }
-    - { resource: "@MangoSyliusOrderCommentsPlugin/Resources/config/mailer.yml" }
-

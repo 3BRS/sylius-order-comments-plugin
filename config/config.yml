@@ -1,0 +1,4 @@
+imports:
+    - { resource: "resources.yml" }
+    - { resource: "mailer.yml" }
+    - { resource: "twig_hooks/" }

@@ -1,12 +1,8 @@
 includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon
     - vendor/phpstan/phpstan-webmozart-assert/extension.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
-    symfony:
-        containerXmlPath: tests/Application/var/cache/test/Tests_MangoSylius_OrderCommentsPlugin_Application_KernelTestDebugContainer.xml
-
     excludePaths:
         - 'src/Migrations/'
         - 'tests/'

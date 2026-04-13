@@ -22,76 +22,66 @@ Order Comments Plugin
 * Create notes on order details
 * Send personalized email to the addressee of the order
 
-<p align="center">
-	<img src="https://raw.githubusercontent.com/mangoweb-sylius/SyliusOrderCommentsPlugin/master/doc/CreateEmailsAndNotes.png"/>
-</p>
+## Requirements
+
+| Package | Version |
+|---------|---------|
+| PHP     | ^8.2    |
+| Sylius  | ^2.0    |
+
+> For Sylius 1.12–1.14, use branch `1.14`.
+> For Sylius 1.10–1.11, use branch `1.11`.
+> For Sylius 1.7–1.9, use branch `1.9`.
 
 ## Installation
 
-1. Run `$ composer require mangoweb-sylius/sylius-order-comments-plugin`.
+1. Run `composer require mangoweb-sylius/sylius-order-comments-plugin`.
 
-2. Add plugin classes to your `config/bundles.php`:
- 
+2. Add plugin class to your `config/bundles.php`:
+
    ```php
    return [
-      ...
-      MangoSylius\OrderCommentsPlugin\MangoSyliusOrderCommentsPlugin::class => ['all' => true],
+       // ...
+       MangoSylius\OrderCommentsPlugin\MangoSyliusOrderCommentsPlugin::class => ['all' => true],
    ];
    ```
-  
-3. Add resource to `config/packages/_sylius.yaml`
+
+3. Import plugin config in `config/packages/_sylius.yaml`:
 
     ```yaml
     imports:
-         ...
-         - { resource: "@MangoSyliusOrderCommentsPlugin/Resources/config/config.yml" }
+        # ...
+        - { resource: "@MangoSyliusOrderCommentsPlugin/config/config.yml" }
     ```
-   
-4. Add routing to `config/_routes.yaml`
+
+4. Add routing to `config/routes/sylius_admin.yaml`:
 
     ```yaml
     mango_sylius_order_comments_plugin:
-      resource: "@MangoSyliusOrderCommentsPlugin/Resources/config/routing.yml"
-      prefix: /admin
-    ```
-5. Override the template in `@SyliusAdminBundle/Order/Show/_notes.html.twig`
-
-   ```twig
-   ...
-    {{ include('@MangoSyliusOrderCommentsPlugin/Admin/_order.html.twig') }}
+        resource: "@MangoSyliusOrderCommentsPlugin/config/routing.yml"
+        prefix: /admin
     ```
 
-6. Create and run doctrine database migrations.
+5. Create and run doctrine database migrations.
 
-For the guide how to use your own entity see [Sylius docs - Customizing Models](https://docs.sylius.com/en/1.6/customization/model.html)
+The order comments form and message list are automatically added to the admin order show page via Twig Hooks. No template overrides needed.
 
 ## Usage
 
-* Comment can be written from the order detail.
-* If I check the "Send to customer" checkbox, it will send an email to the customer's email.
+* Comment can be written from the order detail page.
+* If "Send to customer" is checked, an email is sent to the customer's email address.
 
 ## Development
 
-### Usage
-
-- Create symlink from .env.dist to .env or create your own .env file
-- Develop your plugin in `/src`
-- See `bin/` for useful commands
-
-### Testing
-
-After your changes you must ensure that the tests are still passing.
-
 ```bash
-$ composer install
-$ bin/console doctrine:schema:create -e test
-$ bin/behat.sh
-$ bin/phpstan.sh
-$ bin/ecs.sh
+make run        # Start Docker, install deps, build assets, set up DB
+make tests      # Run PHPStan, PHPUnit, Behat
+make fixtures   # Reset DB and load sample data
+make bash       # Enter PHP container
 ```
 
-License
--------
+## License
+
 This library is under the MIT license.
 
 Credits

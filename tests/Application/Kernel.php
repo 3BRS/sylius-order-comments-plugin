@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\MangoSylius\OrderCommentsPlugin\Application;
 
-use Composer\InstalledVersions;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
+use Sylius\Bundle\CoreBundle\SyliusCoreBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
@@ -31,7 +32,70 @@ final class Kernel extends BaseKernel
 
     public function registerBundles(): iterable
     {
-        $contents = require $this->getProjectDir() . '/config/bundles.php';
+        foreach ($this->getConfigurationDirectories() as $confDir) {
+            $bundlesFile = $confDir . '/bundles.php';
+            if (false === is_file($bundlesFile)) {
+                continue;
+            }
+            yield from $this->registerBundlesFromFile($bundlesFile);
+        }
+    }
+
+    protected function configureRoutes(RoutingConfigurator $routes): void
+    {
+        foreach ($this->getConfigurationDirectories() as $confDir) {
+            $this->loadRoutesConfiguration($routes, $confDir);
+        }
+    }
+
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        foreach ($this->getConfigurationDirectories() as $confDir) {
+            $bundlesFile = $confDir . '/bundles.php';
+            if (false === is_file($bundlesFile)) {
+                continue;
+            }
+            $container->addResource(new FileResource($bundlesFile));
+        }
+
+        foreach ($this->getConfigurationDirectories() as $confDir) {
+            $this->loadContainerConfiguration($loader, $confDir);
+        }
+    }
+
+    protected function getContainerClass(): string
+    {
+        return 'App' . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'Container';
+    }
+
+    protected function getContainerBaseClass(): string
+    {
+        if (str_starts_with($this->getEnvironment(), 'test') && class_exists(MockerContainer::class)) {
+            return MockerContainer::class;
+        }
+
+        return parent::getContainerBaseClass();
+    }
+
+    private function loadContainerConfiguration(LoaderInterface $loader, string $confDir): void
+    {
+        $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{packages}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
+    }
+
+    private function loadRoutesConfiguration(RoutingConfigurator $routes, string $confDir): void
+    {
+        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS);
+        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS);
+        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS);
+    }
+
+    /** @return BundleInterface[] */
+    private function registerBundlesFromFile(string $bundlesFile): iterable
+    {
+        $contents = require $bundlesFile;
         foreach ($contents as $class => $envs) {
             if (isset($envs['all']) || isset($envs[$this->environment])) {
                 yield new $class();
@@ -39,128 +103,29 @@ final class Kernel extends BaseKernel
         }
     }
 
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    /** @return \Generator<string> */
+    private function getConfigurationDirectories(): iterable
     {
-        $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
-        $container->setParameter('container.dumper.inline_class_loader', true);
-        $confDir = $this->getProjectDir() . '/config';
+        yield $this->getProjectDir() . '/config';
 
-        // Common configs
-        $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
-
-        // Version-specific configs — loaded only when the installed Sylius / Symfony
-        // version matches the subdirectory name (e.g. packages/sylius/1.9,
-        // packages/symfony/4). Lets us ship per-version overrides without breaking
-        // other versions.
-        foreach ($this->getVersionSpecificConfigDirs($confDir) as $dir) {
-            $loader->load($dir . '/*' . self::CONFIG_EXTS, 'glob');
+        $syliusConfigDir = $this->getProjectDir() . '/config/sylius/' . SyliusCoreBundle::MAJOR_VERSION . '.' . SyliusCoreBundle::MINOR_VERSION;
+        if (is_dir($syliusConfigDir)) {
+            yield $syliusConfigDir;
         }
 
-        // Environment-specific configs
-        $loader->load($confDir . '/{packages}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
-    }
-
-    protected function configureRoutes(RoutingConfigurator $routes): void
-    {
-        $confDir = $this->getProjectDir() . '/config';
-
-        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, 'glob');
-
-        // Version-specific routes (e.g. routes/sylius/1.9, routes/symfony/5)
-        foreach ($this->getVersionSpecificRouteDirs($confDir) as $dir) {
-            $routes->import($dir . '/*' . self::CONFIG_EXTS, 'glob');
+        $syliusVersionPlusConfigDir = $this->getProjectDir() . '/config/sylius/' . SyliusCoreBundle::MAJOR_VERSION . '+';
+        if (is_dir($syliusVersionPlusConfigDir)) {
+            yield $syliusVersionPlusConfigDir;
         }
 
-        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
-        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, 'glob');
-    }
-
-    protected function getContainerBaseClass(): string
-    {
-        if ($this->isTestEnvironment()) {
-            return MockerContainer::class;
+        $symfonyConfigDir = $this->getProjectDir() . '/config/symfony/' . BaseKernel::MAJOR_VERSION . '.' . BaseKernel::MINOR_VERSION;
+        if (is_dir($symfonyConfigDir)) {
+            yield $symfonyConfigDir;
         }
 
-        return parent::getContainerBaseClass();
-    }
-
-    private function isTestEnvironment(): bool
-    {
-        return str_starts_with($this->getEnvironment(), 'test');
-    }
-
-    /**
-     * @return iterable<string>
-     */
-    private function getVersionSpecificConfigDirs(string $confDir): iterable
-    {
-        yield from $this->getVersionSpecificDirs($confDir . '/packages');
-    }
-
-    /**
-     * @return iterable<string>
-     */
-    private function getVersionSpecificRouteDirs(string $confDir): iterable
-    {
-        yield from $this->getVersionSpecificDirs($confDir . '/routes');
-    }
-
-    /**
-     * @return iterable<string>
-     */
-    private function getVersionSpecificDirs(string $baseDir): iterable
-    {
-        $candidates = [];
-
-        $syliusVersion = $this->detectPackageMajorMinor('sylius/sylius');
-        if ($syliusVersion !== null) {
-            $candidates[] = $baseDir . '/sylius/' . $syliusVersion;
+        $symfonyVersionPlusConfigDir = $this->getProjectDir() . '/config/symfony/' . BaseKernel::MAJOR_VERSION . '+';
+        if (is_dir($symfonyVersionPlusConfigDir)) {
+            yield $symfonyVersionPlusConfigDir;
         }
-
-        $symfonyMajor = $this->detectPackageMajor('symfony/framework-bundle');
-        if ($symfonyMajor !== null) {
-            $candidates[] = $baseDir . '/symfony/' . $symfonyMajor;
-        }
-
-        foreach ($candidates as $dir) {
-            if (is_dir($dir)) {
-                yield $dir;
-            }
-        }
-    }
-
-    private function detectPackageMajorMinor(string $package): ?string
-    {
-        $version = $this->getPackageVersion($package);
-        if ($version !== null && preg_match('/^v?(\d+\.\d+)/', $version, $matches) === 1) {
-            return $matches[1];
-        }
-
-        return null;
-    }
-
-    private function detectPackageMajor(string $package): ?string
-    {
-        $version = $this->getPackageVersion($package);
-        if ($version !== null && preg_match('/^v?(\d+)/', $version, $matches) === 1) {
-            return $matches[1];
-        }
-
-        return null;
-    }
-
-    private function getPackageVersion(string $package): ?string
-    {
-        if (!class_exists(InstalledVersions::class)) {
-            return null;
-        }
-
-        if (!InstalledVersions::isInstalled($package)) {
-            return null;
-        }
-
-        return InstalledVersions::getPrettyVersion($package);
     }
 }

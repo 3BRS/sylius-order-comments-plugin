@@ -5,4 +5,4 @@ web_profiler:
 framework:
     profiler:
         collect: false
-        enabled: true
+        enabled: false

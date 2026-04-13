@@ -10,9 +10,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                sylius_version: [ "1.12", "1.13", "1.14" ]
-                php_version: [ "8.1", "8.2", "8.3" ]
-                symfony_version: [ "6.4" ]
+                sylius_version: [ "2.0", "2.1", "2.2" ]
+                php_version: [ "8.2", "8.3" ]
+                symfony_version: [ "6.4", "7.4" ]
 
         name: PHP ${{ matrix.php_version }} - Sylius ${{ matrix.sylius_version }} - Symfony ${{ matrix.symfony_version }}
 
@@ -32,6 +32,7 @@ jobs:
         env:
             DATABASE_URL: "mysql://root:mysql@127.0.0.1:3306/sylius_test?charset=utf8mb4"
             APP_ENV: test
+            APP_DEBUG: "0"
             APP_SECRET: ch4mb3r0f5ecr3ts
             MAILER_URL: "null://localhost"
             SYLIUS_API_AUTHORIZATION_HEADER: Authorization
@@ -77,7 +78,7 @@ jobs:
                 run: (cd tests/Application && bin/console doctrine:database:create --if-not-exists --env=test -vvv)
 
             -   name: Create schema
-                run: (cd tests/Application && bin/console doctrine:schema:update --force --complete --env=test -vvv)
+                run: (cd tests/Application && bin/console doctrine:schema:update --force --env=test -vvv)
 
             -   name: Cache warmup
                 run: (cd tests/Application && bin/console cache:warmup --env=test -vvv)
@@ -100,3 +101,48 @@ jobs:
                 run: |
                     mkdir -p tests/Application/public/media/image etc/build
                     vendor/bin/behat --no-interaction
+
+            # PREFER LOWEST
+            -   name: Reset database (before prefer-lowest)
+                run: |
+                    (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)
+                    (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
+                    (cd tests/Application && bin/console doctrine:schema:update --force --env=test -vvv)
+
+            -   name: Remove lock file
+                run: rm -f composer.lock
+
+            -   name: Composer install (prefer-lowest)
+                run: composer update --no-interaction --prefer-lowest --no-plugins
+
+            -   name: Install assets (prefer-lowest)
+                run: (cd tests/Application && bin/console assets:install --env=test -vvv)
+
+            -   name: Yarn install (prefer-lowest)
+                run: yarn --cwd tests/Application install
+
+            -   name: Yarn build (prefer-lowest)
+                run: yarn --cwd tests/Application build
+
+            -   name: Drop database (prefer-lowest)
+                run: (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)
+
+            -   name: Create database (prefer-lowest)
+                run: (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
+
+            -   name: Create schema (prefer-lowest)
+                run: (cd tests/Application && bin/console doctrine:schema:update --force --env=test -vvv)
+
+            -   name: Clear cache (prefer-lowest)
+                run: |
+                    rm -fr tests/Application/var/cache
+                    (cd tests/Application && bin/console cache:warmup --env=test -vvv)
+
+            -   name: Run PHPStan (prefer-lowest)
+                run: bin/phpstan.sh
+
+            -   name: Run PHPUnit (prefer-lowest)
+                run: vendor/bin/phpunit
+
+            -   name: Run Behat (prefer-lowest)
+                run: vendor/bin/behat --no-interaction
