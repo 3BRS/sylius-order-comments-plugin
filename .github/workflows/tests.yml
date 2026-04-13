@@ -10,18 +10,15 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                sylius_version: [ "1.7", "1.8", "1.9" ]
-                php_version: [ "7.3", "7.4" ]
-                symfony_version: [ "4.4" ]
+                sylius_version: [ "1.10", "1.11" ]
+                php_version: [ "8.0", "8.1" ]
+                symfony_version: [ "5.4" ]
 
         name: PHP ${{ matrix.php_version }} - Sylius ${{ matrix.sylius_version }} - Symfony ${{ matrix.symfony_version }}
 
         services:
             mysql:
-                # MySQL 5.7 uses mysql_native_password by default, which PHP 7.3 can
-                # talk to. MySQL 8+ defaults to caching_sha2_password, unsupported
-                # by PHP 7.3's mysqlnd (SQLSTATE[HY000] [2054]).
-                image: mysql:5.7
+                image: mysql:8.0
                 env:
                     MYSQL_ROOT_PASSWORD: mysql
                 ports:
@@ -38,6 +35,7 @@ jobs:
             APP_SECRET: ch4mb3r0f5ecr3ts
             MAILER_URL: "null://localhost"
             SYLIUS_API_AUTHORIZATION_HEADER: Authorization
+            MESSENGER_TRANSPORT_DSN: "in-memory://"
 
         steps:
             -   uses: actions/checkout@v4
@@ -60,7 +58,7 @@ jobs:
             -   name: Require specific Sylius and Symfony version
                 run: |
                     composer require "sylius/sylius:${{ matrix.sylius_version }}.*" --no-interaction --no-update --no-scripts
-                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/web-server-bundle)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
+                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
 
             # PREFER DIST
             -   name: Composer install (prefer-dist)
@@ -79,10 +77,13 @@ jobs:
                 run: (cd tests/Application && bin/console doctrine:database:create --if-not-exists --env=test -vvv)
 
             -   name: Create schema
-                run: (cd tests/Application && bin/console doctrine:schema:create --env=test -vvv) || (cd tests/Application && bin/console doctrine:schema:update --force --env=test -vvv)
+                run: (cd tests/Application && bin/console doctrine:schema:update --force --complete --env=test -vvv)
 
             -   name: Cache warmup
                 run: (cd tests/Application && bin/console cache:warmup --env=test -vvv)
+
+            -   name: Generate JWT keypair
+                run: (cd tests/Application && bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction --env=test)
 
             -   name: Run PHPStan
                 run: bin/phpstan.sh
@@ -91,4 +92,49 @@ jobs:
                 run: vendor/bin/phpunit
 
             -   name: Run Behat
+                run: vendor/bin/behat --no-interaction
+
+            # PREFER LOWEST
+            -   name: Reset database (before prefer-lowest)
+                run: |
+                    (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)
+                    (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
+                    (cd tests/Application && bin/console doctrine:schema:update --force --complete --env=test -vvv)
+
+            -   name: Remove lock file
+                run: rm -f composer.lock
+
+            -   name: Composer install (prefer-lowest)
+                run: composer update --no-interaction --prefer-lowest --no-plugins
+
+            -   name: Install assets (prefer-lowest)
+                run: (cd tests/Application && bin/console assets:install --env=test -vvv)
+
+            -   name: Yarn install (prefer-lowest)
+                run: yarn --cwd tests/Application install
+
+            -   name: Yarn build (prefer-lowest)
+                run: GULP_ENV=prod yarn --cwd tests/Application build
+
+            -   name: Drop database (prefer-lowest)
+                run: (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)
+
+            -   name: Create database (prefer-lowest)
+                run: (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
+
+            -   name: Create schema (prefer-lowest)
+                run: (cd tests/Application && bin/console doctrine:schema:update --force --complete --env=test -vvv)
+
+            -   name: Clear cache (prefer-lowest)
+                run: |
+                    rm -fr tests/Application/var/cache
+                    (cd tests/Application && bin/console cache:warmup --env=test -vvv)
+
+            -   name: Run PHPStan (prefer-lowest)
+                run: bin/phpstan.sh
+
+            -   name: Run PHPUnit (prefer-lowest)
+                run: vendor/bin/phpunit
+
+            -   name: Run Behat (prefer-lowest)
                 run: vendor/bin/behat --no-interaction

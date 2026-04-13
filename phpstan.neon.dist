@@ -5,7 +5,7 @@ includes:
 
 parameters:
     symfony:
-        containerXmlPath: tests/Application/var/cache/test/testContainer.xml
+        containerXmlPath: tests/Application/var/cache/test/Tests_MangoSylius_OrderCommentsPlugin_Application_KernelTestDebugContainer.xml
 
     excludePaths:
         - 'src/Migrations/'
@@ -14,3 +14,4 @@ parameters:
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#has no return type specified#'
+        - '#generic interface .* does not specify its types#'
