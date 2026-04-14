@@ -3,8 +3,8 @@
 # Invoked by bin/test-matrix.sh.
 #
 # Arguments:
-#   $1 = sylius_version (e.g. "1.9")
-#   $2 = symfony_version (e.g. "4.4")
+#   $1 = sylius_version (e.g. "2.2")
+#   $2 = symfony_version (e.g. "7.4")
 #   $3 = strategy ("prefer-dist" | "prefer-lowest")
 #
 # Expects /srv/sylius/composer.json.bak to exist (pristine composer.json).
@@ -27,7 +27,7 @@ composer require "sylius/sylius:${sylius_version}.*" --no-interaction --no-updat
 # Require specific Symfony version for packages in composer.json
 # (excluding packages that are not actual Symfony components or have independent versioning)
 grep -o -E '"(symfony/[^"]+)"' composer.json \
-    | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/web-server-bundle)' \
+    | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/type-info)' \
     | xargs printf '%s:'"${symfony_version}"'.* ' \
     | xargs composer require --no-interaction --no-update
 
@@ -53,6 +53,9 @@ mkdir -p tests/Application/var/cache
 
 # Cache warmup
 (cd tests/Application && php bin/console --env=test cache:warmup -vvv)
+
+# JWT keypair
+(cd tests/Application && php bin/console --env=test lexik:jwt:generate-keypair --skip-if-exists --no-interaction)
 
 # PHPStan
 bash bin/phpstan.sh

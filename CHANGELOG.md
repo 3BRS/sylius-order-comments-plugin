@@ -1,8 +1,9 @@
 # Changelog
 
-## Branch `2.0` — Sylius 2.0–2.2
+## Branch `2.2` — Sylius 2.0–2.2
 
 - Require PHP ^8.2, Symfony ^6.4|^7.4, Sylius ^2.0
+- Symfony 6.4 is supported with Sylius 2.1 and 2.2. Sylius 2.0 requires Symfony 7.4 (Sylius 2.0.17 allows composer to resolve `symfony/framework-bundle` to v6.4.1 which is incompatible with modern api-platform)
 - Drop support for Sylius <2.0, PHP <8.2
 - **BREAKING**: Config import path changed from `@MangoSyliusOrderCommentsPlugin/Resources/config/config.yml` to `@MangoSyliusOrderCommentsPlugin/config/config.yml`
 - **BREAKING**: Routing import path changed from `@MangoSyliusOrderCommentsPlugin/Resources/config/routing.yml` to `@MangoSyliusOrderCommentsPlugin/config/routing.yml`
