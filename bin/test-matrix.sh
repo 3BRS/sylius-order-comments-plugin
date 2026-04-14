@@ -6,21 +6,14 @@ ROOT="$(dirname "$DIR")"
 cd "$ROOT"
 
 # Matrix: Sylius x Symfony x composer strategy
-# PHP version is defined by .docker/php/Dockerfile (8.3, matching highest in GitHub matrix)
-# prefer-lowest is not tested: Sylius 2.0/2.1 pin old api-platform versions that have
-# runtime bugs on PHP 8.3, and transitive Symfony packages (symfony/doctrine-bridge etc.)
-# resolve to versions incompatible with the newer symfony/http-kernel interface.
-#
-# Sylius 2.0 + Symfony 6.4 is excluded: Sylius 2.0.17 lets composer resolve
-# symfony/framework-bundle to v6.4.1 (exact minimum) which is incompatible with
-# modern api-platform/serializer's AttributeLoader signature on PHP 8.3.
-# Sylius 2.0 users should use Symfony 7.x instead.
+# PHP version is defined by .docker/php/Dockerfile (8.2 — matching the upper bound
+# required by Sylius 2.0; newer PHP breaks api-platform/serializer's AttributeLoader
+# signature with the older api-platform versions Sylius 2.0 pins).
+# prefer-lowest is not tested: Sylius 2.0 pins old api-platform versions that have
+# runtime bugs, and transitive Symfony packages resolve to incompatible versions.
 COMBINATIONS=(
+    "2.0 6.4 prefer-dist"
     "2.0 7.4 prefer-dist"
-    "2.1 6.4 prefer-dist"
-    "2.1 7.4 prefer-dist"
-    "2.2 6.4 prefer-dist"
-    "2.2 7.4 prefer-dist"
 )
 
 PASSED=()
