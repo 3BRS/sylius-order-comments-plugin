@@ -13,6 +13,12 @@ jobs:
                 sylius_version: [ "2.0", "2.1", "2.2" ]
                 php_version: [ "8.2", "8.3" ]
                 symfony_version: [ "6.4", "7.4" ]
+                exclude:
+                    # Sylius 2.0 + Symfony 6.4 is unsupported: composer resolves
+                    # symfony/framework-bundle to v6.4.1 (minimum) which breaks
+                    # api-platform/serializer's AttributeLoader signature on PHP 8.3.
+                    -   sylius_version: "2.0"
+                        symfony_version: "6.4"
 
         name: PHP ${{ matrix.php_version }} - Sylius ${{ matrix.sylius_version }} - Symfony ${{ matrix.symfony_version }}
 
@@ -59,7 +65,7 @@ jobs:
             -   name: Require specific Sylius and Symfony version
                 run: |
                     composer require "sylius/sylius:${{ matrix.sylius_version }}.*" --no-interaction --no-update --no-scripts
-                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/web-server-bundle)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
+                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/type-info)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
 
             # PREFER DIST
             -   name: Composer install (prefer-dist)

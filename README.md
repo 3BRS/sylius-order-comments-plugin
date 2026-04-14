@@ -32,6 +32,8 @@ Order Comments Plugin
 > For Sylius 1.12–1.14, use branch `1.14`.
 > For Sylius 1.10–1.11, use branch `1.11`.
 > For Sylius 1.7–1.9, use branch `1.9`.
+>
+> This branch (`2.2`) supports Sylius 2.0–2.2.
 
 ## Installation
 
