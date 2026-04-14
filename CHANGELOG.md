@@ -2,7 +2,7 @@
 
 ## Branch `2.0` — Sylius 2.0
 
-- Require PHP >=8.2 <8.3, Symfony ^6.4|^7.4, Sylius ~2.0.0
+- Require PHP 8.2.*, Symfony ^6.4|^7.4, Sylius ~2.0.0
 - Drop support for Sylius <2.0, PHP <8.2
 - PHP capped at 8.2: Sylius 2.0 pins old api-platform versions whose
   `AttributeLoader` signature breaks under PHP 8.3+

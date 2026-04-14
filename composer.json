@@ -5,7 +5,7 @@
     "description": "Order comments plugin for Sylius",
     "license": "MIT",
     "require": {
-        "php": ">=8.2 <8.3",
+        "php": "8.2.*",
         "sylius/sylius": "~2.0.0"
     },
     "require-dev": {
