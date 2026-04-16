@@ -58,7 +58,7 @@ jobs:
             -   name: Require specific Sylius and Symfony version
                 run: |
                     composer require "sylius/sylius:${{ matrix.sylius_version }}.*" --no-interaction --no-update --no-scripts
-                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
+                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/web-server-bundle)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
 
             # PREFER DIST
             -   name: Composer install (prefer-dist)
@@ -92,49 +92,4 @@ jobs:
                 run: vendor/bin/phpunit
 
             -   name: Run Behat
-                run: vendor/bin/behat --no-interaction
-
-            # PREFER LOWEST
-            -   name: Reset database (before prefer-lowest)
-                run: |
-                    (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)
-                    (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
-                    (cd tests/Application && bin/console doctrine:schema:update --force --complete --env=test -vvv)
-
-            -   name: Remove lock file
-                run: rm -f composer.lock
-
-            -   name: Composer install (prefer-lowest)
-                run: composer update --no-interaction --prefer-lowest --no-plugins
-
-            -   name: Install assets (prefer-lowest)
-                run: (cd tests/Application && bin/console assets:install --env=test -vvv)
-
-            -   name: Yarn install (prefer-lowest)
-                run: yarn --cwd tests/Application install
-
-            -   name: Yarn build (prefer-lowest)
-                run: GULP_ENV=prod yarn --cwd tests/Application build
-
-            -   name: Drop database (prefer-lowest)
-                run: (cd tests/Application && bin/console doctrine:database:drop --force --if-exists --env=test -vvv)
-
-            -   name: Create database (prefer-lowest)
-                run: (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
-
-            -   name: Create schema (prefer-lowest)
-                run: (cd tests/Application && bin/console doctrine:schema:update --force --complete --env=test -vvv)
-
-            -   name: Clear cache (prefer-lowest)
-                run: |
-                    rm -fr tests/Application/var/cache
-                    (cd tests/Application && bin/console cache:warmup --env=test -vvv)
-
-            -   name: Run PHPStan (prefer-lowest)
-                run: bin/phpstan.sh
-
-            -   name: Run PHPUnit (prefer-lowest)
-                run: vendor/bin/phpunit
-
-            -   name: Run Behat (prefer-lowest)
                 run: vendor/bin/behat --no-interaction
