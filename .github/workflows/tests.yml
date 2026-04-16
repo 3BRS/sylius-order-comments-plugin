@@ -92,4 +92,6 @@ jobs:
                 run: vendor/bin/phpunit
 
             -   name: Run Behat
-                run: vendor/bin/behat --no-interaction
+                run: |
+                    mkdir -p tests/Application/public/media/image
+                    vendor/bin/behat --no-interaction
