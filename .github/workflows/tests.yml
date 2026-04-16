@@ -11,7 +11,7 @@ jobs:
             fail-fast: false
             matrix:
                 sylius_version: [ "1.10", "1.11" ]
-                php_version: [ "8.0", "8.1" ]
+                php_version: [ "8.1" ]
                 symfony_version: [ "5.4" ]
 
         name: PHP ${{ matrix.php_version }} - Sylius ${{ matrix.sylius_version }} - Symfony ${{ matrix.symfony_version }}
@@ -93,5 +93,5 @@ jobs:
 
             -   name: Run Behat
                 run: |
-                    mkdir -p tests/Application/public/media/image
+                    mkdir -p tests/Application/public/media/image etc/build
                     vendor/bin/behat --no-interaction
