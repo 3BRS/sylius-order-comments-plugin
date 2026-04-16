@@ -33,6 +33,7 @@
         "symfony/web-server-bundle": "^3.4|^4.1"
     },
     "conflict": {
+        "doctrine/doctrine-bundle": "<1.9",
         "symfony/symfony": "4.1.8",
         "symfony/browser-kit": "4.1.8",
         "symfony/dependency-injection": "4.1.8",

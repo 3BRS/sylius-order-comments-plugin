@@ -1,0 +1,4 @@
+doctrine_migrations:
+    # Old config syntax for doctrine/doctrine-migrations-bundle 2.x (Sylius 1.7)
+    dir_name: '%kernel.project_dir%/src/Migrations'
+    namespace: 'DoctrineMigrations'
