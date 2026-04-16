@@ -1,8 +1,6 @@
 name: CI
 
 on:
-    push:
-        branches: [ '1.9' ]
     pull_request:
 
 jobs:
@@ -15,6 +13,12 @@ jobs:
                 sylius_version: [ "1.7", "1.8", "1.9" ]
                 php_version: [ "7.3", "7.4" ]
                 symfony_version: [ "4.4", "5.0" ]
+                exclude:
+                    # Sylius 1.7 and 1.8 only support Symfony 4.4 (not 5.0)
+                    -   sylius_version: "1.7"
+                        symfony_version: "5.0"
+                    -   sylius_version: "1.8"
+                        symfony_version: "5.0"
 
         name: PHP ${{ matrix.php_version }} - Sylius ${{ matrix.sylius_version }} - Symfony ${{ matrix.symfony_version }}
 
@@ -56,7 +60,7 @@ jobs:
             -   name: Require specific Sylius and Symfony version
                 run: |
                     composer require "sylius/sylius:${{ matrix.sylius_version }}.*" --no-interaction --no-update --no-scripts
-                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
+                    grep -o -E '"(symfony/[^"]+)"' composer.json | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/web-server-bundle)' | xargs printf '%s:${{ matrix.symfony_version }}.* ' | xargs composer require --no-interaction --no-update
 
             # PREFER DIST
             -   name: Composer install (prefer-dist)
