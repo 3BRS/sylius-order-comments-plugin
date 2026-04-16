@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\MangoSylius\OrderCommentsPlugin\Application;
 
+use Composer\InstalledVersions;
 use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -56,7 +57,18 @@ final class Kernel extends BaseKernel
         $container->setParameter('container.dumper.inline_class_loader', true);
         $confDir = $this->getProjectDir() . '/config';
 
+        // Common configs
         $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+
+        // Version-specific configs — loaded only when the installed Sylius / Symfony
+        // version matches the subdirectory name (e.g. packages/sylius/1.9,
+        // packages/symfony/4). Lets us ship per-version overrides without breaking
+        // other versions.
+        foreach ($this->getVersionSpecificConfigDirs($confDir) as $dir) {
+            $loader->load($dir . '/*' . self::CONFIG_EXTS, 'glob');
+        }
+
+        // Environment-specific configs
         $loader->load($confDir . '/{packages}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
         $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
         $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
@@ -107,5 +119,62 @@ final class Kernel extends BaseKernel
     private function isTestEnvironment(): bool
     {
         return 0 === strpos($this->getEnvironment(), 'test');
+    }
+
+    /**
+     * @return iterable<string>
+     */
+    private function getVersionSpecificConfigDirs(string $confDir): iterable
+    {
+        $candidates = [];
+
+        $syliusVersion = $this->detectPackageMajorMinor('sylius/sylius');
+        if ($syliusVersion !== null) {
+            $candidates[] = $confDir . '/packages/sylius/' . $syliusVersion;
+        }
+
+        $symfonyMajor = $this->detectPackageMajor('symfony/framework-bundle');
+        if ($symfonyMajor !== null) {
+            $candidates[] = $confDir . '/packages/symfony/' . $symfonyMajor;
+        }
+
+        foreach ($candidates as $dir) {
+            if (is_dir($dir)) {
+                yield $dir;
+            }
+        }
+    }
+
+    private function detectPackageMajorMinor(string $package): ?string
+    {
+        $version = $this->getPackageVersion($package);
+        if ($version !== null && preg_match('/^v?(\d+\.\d+)/', $version, $matches) === 1) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    private function detectPackageMajor(string $package): ?string
+    {
+        $version = $this->getPackageVersion($package);
+        if ($version !== null && preg_match('/^v?(\d+)/', $version, $matches) === 1) {
+            return $matches[1];
+        }
+
+        return null;
+    }
+
+    private function getPackageVersion(string $package): ?string
+    {
+        if (!class_exists(InstalledVersions::class)) {
+            return null;
+        }
+
+        if (!InstalledVersions::isInstalled($package)) {
+            return null;
+        }
+
+        return InstalledVersions::getPrettyVersion($package);
     }
 }
