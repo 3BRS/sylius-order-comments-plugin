@@ -17,7 +17,7 @@ if [ -n "$CONTAINER_XML" ] && [ ! -f "$CONTAINER_XML" ]; then
 fi
 
 set -x
-php --no-php-ini --define memory_limit=1G vendor/bin/phpstan analyse \
+php -d memory_limit=1G vendor/bin/phpstan analyse \
     --debug \
     --level 7 \
     src tests \
