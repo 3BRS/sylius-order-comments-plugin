@@ -1,0 +1,7 @@
+parameters:
+    # These parameters are defined by Sylius 1.9+ core; stubbing them for 1.8
+    # because the API Platform integration references them transitively.
+    sylius.security.new_api_route: '/api/v2'
+    sylius.security.new_api_regex: '^/api/v2'
+    sylius.security.new_api_admin_route: '/api/v2/admin'
+    sylius.security.new_api_shop_route: '/api/v2/shop'
