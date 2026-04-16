@@ -79,6 +79,12 @@ final class Kernel extends BaseKernel
         $confDir = $this->getProjectDir() . '/config';
 
         $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
+
+        // Version-specific routes (e.g. routes/sylius/1.9, routes/symfony/5)
+        foreach ($this->getVersionSpecificRouteDirs($confDir) as $dir) {
+            $routes->import($dir . '/*' . self::CONFIG_EXTS, '/', 'glob');
+        }
+
         $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
     }
@@ -126,16 +132,32 @@ final class Kernel extends BaseKernel
      */
     private function getVersionSpecificConfigDirs(string $confDir): iterable
     {
+        yield from $this->getVersionSpecificDirs($confDir . '/packages');
+    }
+
+    /**
+     * @return iterable<string>
+     */
+    private function getVersionSpecificRouteDirs(string $confDir): iterable
+    {
+        yield from $this->getVersionSpecificDirs($confDir . '/routes');
+    }
+
+    /**
+     * @return iterable<string>
+     */
+    private function getVersionSpecificDirs(string $baseDir): iterable
+    {
         $candidates = [];
 
         $syliusVersion = $this->detectPackageMajorMinor('sylius/sylius');
         if ($syliusVersion !== null) {
-            $candidates[] = $confDir . '/packages/sylius/' . $syliusVersion;
+            $candidates[] = $baseDir . '/sylius/' . $syliusVersion;
         }
 
         $symfonyMajor = $this->detectPackageMajor('symfony/framework-bundle');
         if ($symfonyMajor !== null) {
-            $candidates[] = $confDir . '/packages/symfony/' . $symfonyMajor;
+            $candidates[] = $baseDir . '/symfony/' . $symfonyMajor;
         }
 
         foreach ($candidates as $dir) {
