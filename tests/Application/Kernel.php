@@ -66,15 +66,15 @@ final class Kernel extends BaseKernel
     {
         $confDir = $this->getProjectDir() . '/config';
 
-        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, 'glob');
 
         // Version-specific routes (e.g. routes/sylius/1.9, routes/symfony/5)
         foreach ($this->getVersionSpecificRouteDirs($confDir) as $dir) {
-            $routes->import($dir . '/*' . self::CONFIG_EXTS, '/', 'glob');
+            $routes->import($dir . '/*' . self::CONFIG_EXTS, 'glob');
         }
 
-        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, '/', 'glob');
-        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, 'glob');
+        $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, 'glob');
     }
 
     protected function getContainerBaseClass(): string
