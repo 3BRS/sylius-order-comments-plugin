@@ -2,15 +2,17 @@
 
 ## Branch `2.0` — Sylius 2.0
 
-- Require PHP 8.2.*, Symfony ^6.4|^7.4, Sylius ~2.0.0
+- Require PHP >=8.2, Symfony ^6.4|^7.4, Sylius ~2.0.0
 - Drop support for Sylius <2.0, PHP <8.2
-- PHP capped at 8.2: Sylius 2.0 pins old api-platform versions whose
-  `AttributeLoader` signature breaks under PHP 8.3+
+- CI covers PHP 8.2 and 8.3; newer PHP versions are allowed but untested (use at your own risk)
 - **BREAKING**: Config import path changed from `@MangoSyliusOrderCommentsPlugin/Resources/config/config.yml` to `@MangoSyliusOrderCommentsPlugin/config/config.yml`
 - **BREAKING**: Routing import path changed from `@MangoSyliusOrderCommentsPlugin/Resources/config/routing.yml` to `@MangoSyliusOrderCommentsPlugin/config/routing.yml`
 - Order comments form is now automatically added to the admin order page via Twig Hooks (no manual template override needed)
 - Convert Doctrine annotations to PHP 8 attributes
 - Moved `mailer.yml` config from `src/Resources/config/` to `config/` (loaded automatically via `config.yml` imports)
+- Conflict with `doctrine/orm <2.20.10`: earlier 2.20.x versions fail to fire `postLoad`
+  on lazy-loaded proxies (LazyGhost), breaking `TranslatableEntityLocaleAssigner` so
+  translatable entities throw "No locale has been set" during rendering
 
 ## Branch `1.14` — Sylius 1.12–1.14
 
