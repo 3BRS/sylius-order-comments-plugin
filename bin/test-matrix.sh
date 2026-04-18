@@ -5,15 +5,17 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(dirname "$DIR")"
 cd "$ROOT"
 
-# Matrix: Sylius x Symfony x composer strategy
-# PHP version is defined by .docker/php/Dockerfile (8.2 — matching the upper bound
-# required by Sylius 2.0; newer PHP breaks api-platform/serializer's AttributeLoader
-# signature with the older api-platform versions Sylius 2.0 pins).
-# prefer-lowest is not tested: Sylius 2.0 pins old api-platform versions that have
-# runtime bugs, and transitive Symfony packages resolve to incompatible versions.
+# Matrix: PHP x Sylius x Symfony x composer strategy
+# The PHP container is rebuilt for each PHP version via the PHP_VERSION build arg.
 COMBINATIONS=(
-    "2.0 6.4 prefer-dist"
-    "2.0 7.4 prefer-dist"
+    "8.2 2.0 6.4 prefer-dist"
+    "8.2 2.0 7.4 prefer-dist"
+    "8.2 2.0 6.4 prefer-lowest"
+    "8.2 2.0 7.4 prefer-lowest"
+    "8.3 2.0 6.4 prefer-dist"
+    "8.3 2.0 7.4 prefer-dist"
+    "8.3 2.0 6.4 prefer-lowest"
+    "8.3 2.0 7.4 prefer-lowest"
 )
 
 PASSED=()
@@ -27,14 +29,6 @@ log() {
     echo ""
 }
 
-# Ensure docker is up. Only rebuild if the images don't exist yet (avoids hitting
-# the Docker registry on every run — useful when the registry is unreachable).
-if docker images --format '{{.Repository}}' | grep -q '^syliusordercommentsplugin-php$'; then
-    docker compose up -d
-else
-    docker compose up -d --build
-fi
-
 # Backup composer.json (the per-combination script expects composer.json.bak to exist)
 cp composer.json composer.json.bak
 
@@ -43,10 +37,19 @@ trap 'cp composer.json.bak composer.json; rm -f composer.json.bak' EXIT
 user_id=$(id -u)
 group_id=$(id -g)
 
+current_php_version=""
+
 for combination in "${COMBINATIONS[@]}"; do
     # Split combination string on spaces regardless of IFS
-    IFS=' ' read -r sylius_version symfony_version strategy <<< "$combination"
-    label="Sylius ${sylius_version} / Symfony ${symfony_version} / ${strategy}"
+    IFS=' ' read -r php_version sylius_version symfony_version strategy <<< "$combination"
+    label="PHP ${php_version} / Sylius ${sylius_version} / Symfony ${symfony_version} / ${strategy}"
+
+    # Rebuild/restart the php container only when the PHP version changes.
+    if [ "$php_version" != "$current_php_version" ]; then
+        log "SWITCHING PHP: ${php_version}"
+        PHP_VERSION="$php_version" docker compose up -d --build php
+        current_php_version="$php_version"
+    fi
 
     log "TESTING: ${label}"
 
