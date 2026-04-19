@@ -6,7 +6,7 @@ services:
 
     ThreeBRS\OrderCommentsPlugin\Form\Type\OrderMessageType:
         arguments:
-            - '%three_brs_order_comments_plugin.model.order_message.class%'
+            - '%threebrs_order_comments_plugin.model.order_message.class%'
         tags:
             - name: form.type
 
@@ -22,4 +22,4 @@ services:
             $builder: '@form.factory'
             $token: '@security.token_storage'
             $orderRepository: '@sylius.repository.order'
-            $orderMessageRepository: '@three_brs_order_comments_plugin.repository.order_message'
+            $orderMessageRepository: '@threebrs_order_comments_plugin.repository.order_message'

@@ -1,6 +1,6 @@
 sylius_resource:
     resources:
-        three_brs_order_comments_plugin.order_message:
+        threebrs_order_comments_plugin.order_message:
             classes:
                 model: ThreeBRS\OrderCommentsPlugin\Entity\OrderMessage
                 form: ThreeBRS\OrderCommentsPlugin\Form\Type\OrderMessageType

@@ -1,21 +1,6 @@
-<p align="center">
-    <a href="https://www.3brs.com" target="_blank">
-        <img src="https://3brs1.fra1.cdn.digitaloceanspaces.com/3brs/logo/3BRS-logo-sylius-200.png"/>
-    </a>
-</p>
-<h1 align="center">
-Order Comments Plugin
-<br />
-    <a href="https://packagist.org/packages/3brs/sylius-order-comments-plugin" title="License" target="_blank">
-        <img src="https://img.shields.io/packagist/l/3brs/sylius-order-comments-plugin.svg" />
-    </a>
-    <a href="https://packagist.org/packages/3brs/sylius-order-comments-plugin" title="Version" target="_blank">
-        <img src="https://img.shields.io/packagist/v/3brs/sylius-order-comments-plugin.svg" />
-    </a>
-    <a href="http://travis-ci.com/3brs/sylius-order-comments-plugin" title="Build status" target="_blank">
-        <img src="https://img.shields.io/travis/3brs/sylius-order-comments-plugin/master.svg" />
-    </a>
-</h1>
+# Order Comments Plugin
+
+Create notes and send emails from the Sylius admin order detail page.
 
 ## Features
 
@@ -36,14 +21,14 @@ Order Comments Plugin
 
 ## Installation
 
-1. Run `composer require mangoweb-sylius/sylius-order-comments-plugin`.
+1. Run `composer require 3brs/sylius-order-comments-plugin`.
 
 2. Add plugin class to your `config/bundles.php`:
 
    ```php
    return [
        // ...
-       MangoSylius\OrderCommentsPlugin\MangoSyliusOrderCommentsPlugin::class => ['all' => true],
+       ThreeBRS\OrderCommentsPlugin\ThreeBRSOrderCommentsPlugin::class => ['all' => true],
    ];
    ```
 
@@ -52,18 +37,20 @@ Order Comments Plugin
     ```yaml
     imports:
         # ...
-        - { resource: "@MangoSyliusOrderCommentsPlugin/config/config.yml" }
+        - { resource: "@ThreeBRSOrderCommentsPlugin/config/config.yml" }
     ```
 
 4. Add routing to `config/routes/sylius_admin.yaml`:
 
     ```yaml
-    mango_sylius_order_comments_plugin:
-        resource: "@MangoSyliusOrderCommentsPlugin/config/routing.yml"
+    threebrs_order_comments_plugin:
+        resource: "@ThreeBRSOrderCommentsPlugin/config/routing.yml"
         prefix: /admin
     ```
 
-5. Create and run doctrine database migrations.
+5. Create and run doctrine database migrations. If you are upgrading from the
+   `mangoweb-sylius/sylius-order-comments-plugin` package, generate a migration
+   that renames the table `mangoweb_order_message` to `threebrs_order_message`.
 
 The order comments form and message list are automatically added to the admin order show page via Twig Hooks. No template overrides needed.
 
@@ -87,5 +74,5 @@ This library is under the MIT license.
 
 Credits
 -------
-Developed by [3BRS](https://3brs.com)<br>
+Developed by [3BRS](https://www.3brs.com)<br>
 Forked from [manGoweb](https://github.com/mangoweb-sylius/SyliusOrderCommentsPlugin).

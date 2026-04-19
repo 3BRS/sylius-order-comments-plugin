@@ -46,8 +46,8 @@ final class ShowPage extends SymfonyPage implements ShowPageInterface
     protected function getDefinedElements(): array
     {
         return array_merge(parent::getDefinedElements(), [
-            'save' => '#three_brs_order_message_save',
-            'message' => '#three_brs_order_message_message',
+            'save' => '#threebrs_order_message_save',
+            'message' => '#threebrs_order_message_message',
             'order_message' => '#orderMessage',
         ]);
     }

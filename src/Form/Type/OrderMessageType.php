@@ -20,17 +20,17 @@ class OrderMessageType extends AbstractResourceType
                 'required' => true,
             ])
             ->add('sendMail', CheckboxType::class, [
-                'label' => 'three_brs.orderMessage.sendMail',
+                'label' => 'threebrs.orderMessage.sendMail',
                 'required' => false,
                 'value' => 0,
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'three_brs.orderMessage.save',
+                'label' => 'threebrs.orderMessage.save',
             ]);
     }
 
     public function getBlockPrefix()
     {
-        return 'three_brs_order_message';
+        return 'threebrs_order_message';
     }
 }

@@ -2,22 +2,22 @@
 	<div id='orderMessage' class="ui segment">
 		{% for message in messages %}
 			<div class="ui segment">
-				{{ 'three_brs.orderMessage.sender'|trans }} {{ message.sender.username }}
+				{{ 'threebrs.orderMessage.sender'|trans }} {{ message.sender.username }}
 				<br><br>
 				{% if message.sendMail %}
-					{{ 'three_brs.orderMessage.message'|trans }}
+					{{ 'threebrs.orderMessage.message'|trans }}
 				{% else %}
-					{{ 'three_brs.orderMessage.note'|trans }}
+					{{ 'threebrs.orderMessage.note'|trans }}
 				{% endif %}
 				<br>
 				{{ message.message }}
 				<br>
 				{% if message.sendMail %}
 					<br>
-					{{ 'three_brs.orderMessage.sent'|trans }}
+					{{ 'threebrs.orderMessage.sent'|trans }}
 				{% endif %}
 				<br>
-				{{ 'three_brs.orderMessage.time'|trans }} {{ message.sendTime|date('Y-m-d H:i:s') }}
+				{{ 'threebrs.orderMessage.time'|trans }} {{ message.sendTime|date('Y-m-d H:i:s') }}
 
 			</div>
 		{% endfor %}

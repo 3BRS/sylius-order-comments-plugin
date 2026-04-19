@@ -1,4 +1,4 @@
-three_brs_admin_order_message_send:
+threebrs_admin_order_message_send:
     path: ordermessage/{orderId}/save
     methods: [POST]
     defaults:

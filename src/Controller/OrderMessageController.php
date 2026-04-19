@@ -41,7 +41,7 @@ class OrderMessageController
     {
         $orderMessage = new OrderMessage();
         $form = $this->builder->create(OrderMessageType::class, $orderMessage, [
-            'action' => $this->router->generate('three_brs_admin_order_message_send', ['orderId' => $orderId]),
+            'action' => $this->router->generate('threebrs_admin_order_message_send', ['orderId' => $orderId]),
             'method' => 'POST',
         ]);
 
@@ -67,12 +67,12 @@ class OrderMessageController
                 if ($orderMessage->isSendMail()) {
                     assert($customer instanceof CustomerInterface);
                     $this->mailer->send('order_mail', [$customer->getEmail()], ['orderMessage' => $orderMessage]);
-                    $this->addFlash('success', $this->translator->trans('three_brs.orderMessage.success.mail'));
+                    $this->addFlash('success', $this->translator->trans('threebrs.orderMessage.success.mail'));
                 } else {
-                    $this->addFlash('success', $this->translator->trans('three_brs.orderMessage.success.note'));
+                    $this->addFlash('success', $this->translator->trans('threebrs.orderMessage.success.note'));
                 }
             } else {
-                $this->addFlash('error', $this->translator->trans('three_brs.orderMessage.error'));
+                $this->addFlash('error', $this->translator->trans('threebrs.orderMessage.error'));
             }
 
             return new RedirectResponse($this->router->generate('sylius_admin_order_show', ['id' => $orderId]));
