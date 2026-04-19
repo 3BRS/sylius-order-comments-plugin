@@ -21,7 +21,7 @@ default:
         FriendsOfBehat\SymfonyExtension:
             bootstrap: tests/Application/config/bootstrap.php
             kernel:
-                class: Tests\MangoSylius\OrderCommentsPlugin\Application\Kernel
+                class: Tests\ThreeBRS\OrderCommentsPlugin\Application\Kernel
 
         FriendsOfBehat\VariadicExtension: ~
 

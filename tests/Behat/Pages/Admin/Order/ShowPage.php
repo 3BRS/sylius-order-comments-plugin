@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\MangoSylius\OrderCommentsPlugin\Behat\Pages\Admin\Order;
+namespace Tests\ThreeBRS\OrderCommentsPlugin\Behat\Pages\Admin\Order;
 
 use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 
@@ -46,8 +46,8 @@ final class ShowPage extends SymfonyPage implements ShowPageInterface
     protected function getDefinedElements(): array
     {
         return array_merge(parent::getDefinedElements(), [
-            'save' => '#mango_sylius_order_message_save',
-            'message' => '#mango_sylius_order_message_message',
+            'save' => '#three_brs_order_message_save',
+            'message' => '#three_brs_order_message_message',
             'order_message' => '#orderMessage',
         ]);
     }

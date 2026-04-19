@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\MangoSylius\OrderCommentsPlugin\Behat\Context\Ui\Admin;
+namespace Tests\ThreeBRS\OrderCommentsPlugin\Behat\Context\Ui\Admin;
 
 use Behat\Behat\Context\Context;
 use Sylius\Behat\NotificationType;
 use Sylius\Behat\Service\Checker\EmailCheckerInterface;
 use Sylius\Behat\Service\NotificationCheckerInterface;
-use Tests\MangoSylius\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPageInterface;
+use Tests\ThreeBRS\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPageInterface;
 use Webmozart\Assert\Assert;
 
 final class ManagingOrderMessageContext implements Context

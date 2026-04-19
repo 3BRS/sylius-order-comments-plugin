@@ -22,7 +22,7 @@ Feature: Save order note
   Scenario: Being able to create order note
     When I view the summary of the order "00000001"
     And I write a message
-    And I uncheck the checkbox "mango_sylius_order_message_sendMail"
+    And I uncheck the checkbox "three_brs_order_message_sendMail"
     And I save the order message
     Then the note generated should not be sent to "sylius@mangoweb.cz"
     And I should be notified that the note as been created
@@ -32,7 +32,7 @@ Feature: Save order note
   Scenario: Being able to send an order message email to Customer
     When I view the summary of the order "00000001"
     And I write a message
-    And I check the checkbox "mango_sylius_order_message_sendMail"
+    And I check the checkbox "three_brs_order_message_sendMail"
     And I send the order message
     Then an email generated for order "00000001" should be sent to "sylius@mangoweb.cz"
     And the email to "sylius@mangoweb.cz" should contain the message text

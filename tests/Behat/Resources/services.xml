@@ -7,14 +7,14 @@
         <defaults public="true"/>
 
         <service id="sylius.behat.context.ui.admin.order_message"
-                 class="Tests\MangoSylius\OrderCommentsPlugin\Behat\Context\Ui\Admin\ManagingOrderMessageContext">
-            <argument type="service" id="Tests\MangoSylius\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPageInterface"/>
+                 class="Tests\ThreeBRS\OrderCommentsPlugin\Behat\Context\Ui\Admin\ManagingOrderMessageContext">
+            <argument type="service" id="Tests\ThreeBRS\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPageInterface"/>
             <argument type="service" id="sylius.behat.notification_checker.admin"/>
             <argument type="service" id="sylius.behat.email_checker"/>
         </service>
 
-        <service id="Tests\MangoSylius\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPageInterface"
-                 class="Tests\MangoSylius\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPage"
+        <service id="Tests\ThreeBRS\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPageInterface"
+                 class="Tests\ThreeBRS\OrderCommentsPlugin\Behat\Pages\Admin\Order\ShowPage"
                  parent="sylius.behat.symfony_page"
                  public="true"
         />

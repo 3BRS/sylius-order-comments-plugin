@@ -2,6 +2,6 @@ sylius_admin:
     resource: "@SyliusAdminBundle/Resources/config/routing.yml"
     prefix: /admin
 
-mango_sylius_order_comments_plugin:
-  resource: "@MangoSyliusOrderCommentsPlugin/config/routing.yml"
+three_brs_order_comments_plugin:
+  resource: "@ThreeBRSOrderCommentsPlugin/config/routing.yml"
   prefix: /admin
