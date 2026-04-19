@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MangoSylius\OrderCommentsPlugin\Controller;
+namespace ThreeBRS\OrderCommentsPlugin\Controller;
 
-use MangoSylius\OrderCommentsPlugin\Entity\OrderMessage;
-use MangoSylius\OrderCommentsPlugin\Form\Type\OrderMessageType;
+use ThreeBRS\OrderCommentsPlugin\Entity\OrderMessage;
+use ThreeBRS\OrderCommentsPlugin\Form\Type\OrderMessageType;
 use Sylius\Component\Core\Model\AdminUserInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -41,7 +41,7 @@ class OrderMessageController
     {
         $orderMessage = new OrderMessage();
         $form = $this->builder->create(OrderMessageType::class, $orderMessage, [
-            'action' => $this->router->generate('mango_sylius_admin_order_message_send', ['orderId' => $orderId]),
+            'action' => $this->router->generate('three_brs_admin_order_message_send', ['orderId' => $orderId]),
             'method' => 'POST',
         ]);
 
@@ -67,18 +67,18 @@ class OrderMessageController
                 if ($orderMessage->isSendMail()) {
                     assert($customer instanceof CustomerInterface);
                     $this->mailer->send('order_mail', [$customer->getEmail()], ['orderMessage' => $orderMessage]);
-                    $this->addFlash('success', $this->translator->trans('mango_sylius.orderMessage.success.mail'));
+                    $this->addFlash('success', $this->translator->trans('three_brs.orderMessage.success.mail'));
                 } else {
-                    $this->addFlash('success', $this->translator->trans('mango_sylius.orderMessage.success.note'));
+                    $this->addFlash('success', $this->translator->trans('three_brs.orderMessage.success.note'));
                 }
             } else {
-                $this->addFlash('error', $this->translator->trans('mango_sylius.orderMessage.error'));
+                $this->addFlash('error', $this->translator->trans('three_brs.orderMessage.error'));
             }
 
             return new RedirectResponse($this->router->generate('sylius_admin_order_show', ['id' => $orderId]));
         }
 
-        return new Response($this->twig->render('@MangoSyliusOrderCommentsPlugin/Admin/Form/_form.html.twig', [
+        return new Response($this->twig->render('@ThreeBRSOrderCommentsPlugin/Admin/Form/_form.html.twig', [
             'form' => $form->createView(),
         ]));
     }
@@ -87,7 +87,7 @@ class OrderMessageController
     {
         $orderMessages = $this->orderMessageRepository->findBy(['order' => $orderId]);
 
-        return new Response($this->twig->render('@MangoSyliusOrderCommentsPlugin/Admin/_show.html.twig', [
+        return new Response($this->twig->render('@ThreeBRSOrderCommentsPlugin/Admin/_show.html.twig', [
             'messages' => $orderMessages,
         ]));
     }

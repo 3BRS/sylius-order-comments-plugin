@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MangoSylius\OrderCommentsPlugin\Form\Type;
+namespace ThreeBRS\OrderCommentsPlugin\Form\Type;
 
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,17 +20,17 @@ class OrderMessageType extends AbstractResourceType
                 'required' => true,
             ])
             ->add('sendMail', CheckboxType::class, [
-                'label' => 'mango_sylius.orderMessage.sendMail',
+                'label' => 'three_brs.orderMessage.sendMail',
                 'required' => false,
                 'value' => 0,
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'mango_sylius.orderMessage.save',
+                'label' => 'three_brs.orderMessage.save',
             ]);
     }
 
     public function getBlockPrefix()
     {
-        return 'mango_sylius_order_message';
+        return 'three_brs_order_message';
     }
 }

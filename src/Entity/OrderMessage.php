@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MangoSylius\OrderCommentsPlugin\Entity;
+namespace ThreeBRS\OrderCommentsPlugin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\AdminUserInterface;
@@ -10,7 +10,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'mangoweb_order_message')]
+#[ORM\Table(name: 'three_brs_order_message')]
 class OrderMessage implements OrderMessageInterface
 {
     #[ORM\Column(name: 'id', type: 'integer')]
