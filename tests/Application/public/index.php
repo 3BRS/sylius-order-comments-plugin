@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
-use Tests\MangoSylius\OrderCommentsPlugin\Application\Kernel;
+use Tests\ThreeBRS\OrderCommentsPlugin\Application\Kernel;
 
 require dirname(__DIR__) . '/config/bootstrap.php';
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\MangoSylius\OrderCommentsPlugin\Behat\Pages\Admin\Order;
+namespace Tests\ThreeBRS\OrderCommentsPlugin\Behat\Pages\Admin\Order;
 
 use FriendsOfBehat\PageObjectExtension\Page\SymfonyPageInterface;
 

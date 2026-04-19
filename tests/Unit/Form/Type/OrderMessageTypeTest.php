@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\MangoSylius\OrderCommentsPlugin\Unit\Form\Type;
+namespace Tests\ThreeBRS\OrderCommentsPlugin\Unit\Form\Type;
 
-use MangoSylius\OrderCommentsPlugin\Entity\OrderMessage;
-use MangoSylius\OrderCommentsPlugin\Form\Type\OrderMessageType;
+use ThreeBRS\OrderCommentsPlugin\Entity\OrderMessage;
+use ThreeBRS\OrderCommentsPlugin\Form\Type\OrderMessageType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,7 +23,7 @@ final class OrderMessageTypeTest extends TestCase
 
     public function testBlockPrefix(): void
     {
-        self::assertSame('mango_sylius_order_message', $this->formType->getBlockPrefix());
+        self::assertSame('three_brs_order_message', $this->formType->getBlockPrefix());
     }
 
     public function testBuildFormAddsExpectedFields(): void
@@ -48,10 +48,10 @@ final class OrderMessageTypeTest extends TestCase
 
         self::assertSame('sendMail', $addedFields[1]['name']);
         self::assertSame(CheckboxType::class, $addedFields[1]['type']);
-        self::assertSame('mango_sylius.orderMessage.sendMail', $addedFields[1]['options']['label']);
+        self::assertSame('three_brs.orderMessage.sendMail', $addedFields[1]['options']['label']);
 
         self::assertSame('save', $addedFields[2]['name']);
         self::assertSame(SubmitType::class, $addedFields[2]['type']);
-        self::assertSame('mango_sylius.orderMessage.save', $addedFields[2]['options']['label']);
+        self::assertSame('three_brs.orderMessage.save', $addedFields[2]['options']['label']);
     }
 }

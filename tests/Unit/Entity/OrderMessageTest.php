@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\MangoSylius\OrderCommentsPlugin\Unit\Entity;
+namespace Tests\ThreeBRS\OrderCommentsPlugin\Unit\Entity;
 
-use MangoSylius\OrderCommentsPlugin\Entity\OrderMessage;
-use MangoSylius\OrderCommentsPlugin\Entity\OrderMessageInterface;
+use ThreeBRS\OrderCommentsPlugin\Entity\OrderMessage;
+use ThreeBRS\OrderCommentsPlugin\Entity\OrderMessageInterface;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Core\Model\AdminUserInterface;
 use Sylius\Component\Core\Model\OrderInterface;
