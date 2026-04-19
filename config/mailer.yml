@@ -1,4 +1,4 @@
 sylius_mailer:
     emails:
         order_mail:
-            template: "@MangoSyliusOrderCommentsPlugin/Admin/Email/orderCommentEmail.html.twig"
+            template: "@ThreeBRSOrderCommentsPlugin/Admin/Email/orderCommentEmail.html.twig"

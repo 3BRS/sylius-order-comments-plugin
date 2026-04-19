@@ -4,13 +4,13 @@ services:
         autoconfigure: false
         public: false
 
-    MangoSylius\OrderCommentsPlugin\Form\Type\OrderMessageType:
+    ThreeBRS\OrderCommentsPlugin\Form\Type\OrderMessageType:
         arguments:
-            - '%mango_order_comments_plugin.model.order_message.class%'
+            - '%three_brs_order_comments_plugin.model.order_message.class%'
         tags:
             - name: form.type
 
-    MangoSylius\OrderCommentsPlugin\Controller\OrderMessageController:
+    ThreeBRS\OrderCommentsPlugin\Controller\OrderMessageController:
         tags:
             - 'controller.service_arguments'
         arguments:
@@ -22,4 +22,4 @@ services:
             $builder: '@form.factory'
             $token: '@security.token_storage'
             $orderRepository: '@sylius.repository.order'
-            $orderMessageRepository: '@mango_order_comments_plugin.repository.order_message'
+            $orderMessageRepository: '@three_brs_order_comments_plugin.repository.order_message'

@@ -1,4 +1,4 @@
-mango_sylius:
+three_brs:
     orderMessage:
         title: 'Comment order'
         sendMail: 'Send to customer'

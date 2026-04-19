@@ -1,4 +1,4 @@
-mango_sylius:
+three_brs:
     orderMessage:
         title: 'Poznámka k objednávce'
         sendMail: 'Zaslat zákazníkovi'
