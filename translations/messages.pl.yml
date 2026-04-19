@@ -1,4 +1,4 @@
-mango_sylius:
+three_brs:
     orderMessage:
         title: 'Komentarz do zamówienia'
         sendMail: 'Wyślij do klienta'

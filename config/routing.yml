@@ -1,5 +1,5 @@
-mango_sylius_admin_order_message_send:
+three_brs_admin_order_message_send:
     path: ordermessage/{orderId}/save
     methods: [POST]
     defaults:
-        _controller: MangoSylius\OrderCommentsPlugin\Controller\OrderMessageController::save
+        _controller: ThreeBRS\OrderCommentsPlugin\Controller\OrderMessageController::save

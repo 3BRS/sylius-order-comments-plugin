@@ -1,9 +1,9 @@
 {% set order = hookable_metadata.context.resource %}
 
 {{ render(controller(
-    'MangoSylius\\OrderCommentsPlugin\\Controller\\OrderMessageController::save', {orderId: order.id}
+    'ThreeBRS\\OrderCommentsPlugin\\Controller\\OrderMessageController::save', {orderId: order.id}
 )) }}
 
 {{ render(controller(
-    'MangoSylius\\OrderCommentsPlugin\\Controller\\OrderMessageController::show', {orderId: order.id}
+    'ThreeBRS\\OrderCommentsPlugin\\Controller\\OrderMessageController::show', {orderId: order.id}
 )) }}
