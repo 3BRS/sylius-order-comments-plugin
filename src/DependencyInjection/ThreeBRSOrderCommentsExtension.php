@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace MangoSylius\OrderCommentsPlugin\DependencyInjection;
+namespace ThreeBRS\OrderCommentsPlugin\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-final class MangoSyliusOrderCommentsExtension extends Extension
+final class ThreeBRSOrderCommentsExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {

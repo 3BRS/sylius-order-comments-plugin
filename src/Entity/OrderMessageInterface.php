@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MangoSylius\OrderCommentsPlugin\Entity;
+namespace ThreeBRS\OrderCommentsPlugin\Entity;
 
 use Sylius\Component\Core\Model\AdminUserInterface;
 use Sylius\Component\Core\Model\OrderInterface;
