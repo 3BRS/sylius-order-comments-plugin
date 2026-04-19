@@ -1,5 +1,21 @@
 # Changelog
 
+## Branch `2.2` — Rebrand to 3BRS
+
+Breaking rebrand released together with the Sylius 2.x bump. Existing installs
+must update references throughout their application.
+
+- **BREAKING**: Composer package renamed from `mangoweb-sylius/sylius-order-comments-plugin` to `3brs/sylius-order-comments-plugin`
+- **BREAKING**: PHP root namespace renamed from `MangoSylius\OrderCommentsPlugin` to `ThreeBRS\OrderCommentsPlugin`
+- **BREAKING**: Bundle class renamed from `MangoSyliusOrderCommentsPlugin` to `ThreeBRSOrderCommentsPlugin`
+- **BREAKING**: Extension class renamed from `MangoSyliusOrderCommentsExtension` to `ThreeBRSOrderCommentsExtension`
+- **BREAKING**: Bundle alias for Twig/config resource paths renamed from `@MangoSyliusOrderCommentsPlugin` to `@ThreeBRSOrderCommentsPlugin`
+- **BREAKING**: Service ids, parameters, and resource keys renamed from `mango_order_comments_plugin.*` to `threebrs_order_comments_plugin.*`
+- **BREAKING**: Route names renamed (`mango_sylius_admin_order_message_send` → `threebrs_admin_order_message_send`, `mango_sylius_order_comments_plugin` → `threebrs_order_comments_plugin`)
+- **BREAKING**: Form block prefix renamed from `mango_sylius_order_message` to `threebrs_order_message` (also affects rendered HTML element ids such as `#mango_sylius_order_message_sendMail`)
+- **BREAKING**: Translation root key renamed from `mango_sylius:` to `threebrs:` in all locales
+- **BREAKING**: Doctrine table renamed from `mangoweb_order_message` to `threebrs_order_message` — upgraders must generate and run a migration that renames the table
+
 ## Branch `2.2` — Sylius 2.0–2.2
 
 - Require PHP >=8.2, Symfony ^6.4|^7.4, Sylius ^2.0 (covers 2.0, 2.1, 2.2)

@@ -23,7 +23,7 @@ final class OrderMessageTypeTest extends TestCase
 
     public function testBlockPrefix(): void
     {
-        self::assertSame('three_brs_order_message', $this->formType->getBlockPrefix());
+        self::assertSame('threebrs_order_message', $this->formType->getBlockPrefix());
     }
 
     public function testBuildFormAddsExpectedFields(): void
@@ -48,10 +48,10 @@ final class OrderMessageTypeTest extends TestCase
 
         self::assertSame('sendMail', $addedFields[1]['name']);
         self::assertSame(CheckboxType::class, $addedFields[1]['type']);
-        self::assertSame('three_brs.orderMessage.sendMail', $addedFields[1]['options']['label']);
+        self::assertSame('threebrs.orderMessage.sendMail', $addedFields[1]['options']['label']);
 
         self::assertSame('save', $addedFields[2]['name']);
         self::assertSame(SubmitType::class, $addedFields[2]['type']);
-        self::assertSame('three_brs.orderMessage.save', $addedFields[2]['options']['label']);
+        self::assertSame('threebrs.orderMessage.save', $addedFields[2]['options']['label']);
     }
 }

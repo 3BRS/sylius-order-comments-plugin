@@ -1,4 +1,4 @@
-three_brs:
+threebrs:
     orderMessage:
         title: 'Komentarz do zamówienia'
         sendMail: 'Wyślij do klienta'

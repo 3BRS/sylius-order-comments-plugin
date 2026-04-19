@@ -10,7 +10,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'three_brs_order_message')]
+#[ORM\Table(name: 'threebrs_order_message')]
 class OrderMessage implements OrderMessageInterface
 {
     #[ORM\Column(name: 'id', type: 'integer')]

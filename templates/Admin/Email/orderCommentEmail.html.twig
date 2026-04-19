@@ -1,10 +1,10 @@
 {% block subject %}
-	{{ 'three_brs.orderMessage.subject'|trans({'%orderNumber%': orderMessage.order.number}) }}
+	{{ 'threebrs.orderMessage.subject'|trans({'%orderNumber%': orderMessage.order.number}) }}
 {% endblock %}
 
 {% block body %}
 	{% autoescape %}
-		{{ 'three_brs.orderMessage.subject'|trans({'%orderNumber%': orderMessage.order.number}) }}
+		{{ 'threebrs.orderMessage.subject'|trans({'%orderNumber%': orderMessage.order.number}) }}
 		<br><br>
 		{{ orderMessage.message }}
 	{% endautoescape %}
