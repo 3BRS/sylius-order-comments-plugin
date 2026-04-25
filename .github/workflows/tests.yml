@@ -115,6 +115,9 @@ jobs:
             -   name: Composer install (prefer-lowest)
                 run: composer update --no-interaction --prefer-lowest --no-plugins
 
+            -   name: Clear cache after composer update (prefer-lowest)
+                run: rm -fr tests/Application/var/cache
+
             -   name: Install assets (prefer-lowest)
                 run: (cd tests/Application && bin/console assets:install --env=test -vvv)
 
