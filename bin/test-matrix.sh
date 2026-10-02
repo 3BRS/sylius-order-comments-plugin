@@ -32,6 +32,10 @@ COMBINATIONS=(
     "8.3 2.2 7.4 prefer-dist"
     "8.3 2.2 6.4 prefer-lowest"
     "8.3 2.2 7.4 prefer-lowest"
+    "8.3 2.3 7.4 prefer-lowest"
+    "8.3 2.3 7.4 prefer-dist"
+    "8.4 2.3 8.1 prefer-lowest"
+    "8.4 2.3 8.1 prefer-dist"
 )
 
 PASSED=()

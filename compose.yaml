@@ -3,7 +3,7 @@ services:
         build:
             context: ./.docker/php
             args:
-                PHP_VERSION: "${PHP_VERSION:-8.2}"
+                PHP_VERSION: "${PHP_VERSION:-8.4}"
         working_dir: /srv/sylius
         environment:
             APP_ENV: "test"

@@ -31,7 +31,6 @@ $bundles = [
     Sylius\Bundle\CoreBundle\SyliusCoreBundle::class => ['all' => true],
     Sylius\Bundle\ResourceBundle\SyliusResourceBundle::class => ['all' => true],
     Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
-    Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class => ['all' => true],
     Knp\Bundle\MenuBundle\KnpMenuBundle::class => ['all' => true],
     Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
     Payum\Bundle\PayumBundle\PayumBundle::class => ['all' => true],
@@ -66,6 +65,7 @@ $bundles = [
 $optionalBundles = [
     winzou\Bundle\StateMachineBundle\winzouStateMachineBundle::class,
     Sylius\Calendar\SyliusCalendarBundle::class,
+    Knp\Bundle\GaufretteBundle\KnpGaufretteBundle::class,
 ];
 foreach ($optionalBundles as $bundleClass) {
     if (class_exists($bundleClass)) {

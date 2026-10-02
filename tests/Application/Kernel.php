@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\ThreeBRS\OrderCommentsPlugin\Application;
 
-use PSS\SymfonyMockerContainer\DependencyInjection\MockerContainer;
 use Sylius\Bundle\CoreBundle\SyliusCoreBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -66,15 +65,6 @@ final class Kernel extends BaseKernel
     protected function getContainerClass(): string
     {
         return 'App' . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'Container';
-    }
-
-    protected function getContainerBaseClass(): string
-    {
-        if (str_starts_with($this->getEnvironment(), 'test') && class_exists(MockerContainer::class)) {
-            return MockerContainer::class;
-        }
-
-        return parent::getContainerBaseClass();
     }
 
     private function loadContainerConfiguration(LoaderInterface $loader, string $confDir): void

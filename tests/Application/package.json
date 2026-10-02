@@ -12,6 +12,6 @@
         "@symfony/ux-live-component": "file:../../vendor/symfony/ux-live-component/assets"
     },
     "devDependencies": {
-        "@symfony/webpack-encore": "^4.0.0 || ^5.0.0"
+        "@symfony/webpack-encore": "^6.0.0"
     }
 }
