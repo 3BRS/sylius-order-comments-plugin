@@ -1,6 +1,6 @@
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.4
 
-FROM node:20-alpine AS node
+FROM node:22-alpine AS node
 
 FROM php:${PHP_VERSION}-fpm-alpine
 

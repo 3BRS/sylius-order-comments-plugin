@@ -3,8 +3,8 @@
 # Invoked by bin/test-matrix.sh.
 #
 # Arguments:
-#   $1 = sylius_version (e.g. "2.2")
-#   $2 = symfony_version (e.g. "7.4")
+#   $1 = sylius_version (e.g. "2.3")
+#   $2 = symfony_version (e.g. "8.1")
 #   $3 = strategy ("prefer-dist" | "prefer-lowest")
 #
 # Expects /srv/sylius/composer.json.bak to exist (pristine composer.json).
@@ -17,26 +17,33 @@ strategy="$3"
 
 cd /srv/sylius
 
-# Restore original composer.json and remove lock file
+# Restore original composer.json, remove lock file and vendor
+# (vendor is removed so Composer plugins are not upgraded or downgraded while loaded)
 cp composer.json.bak composer.json
 rm -f composer.lock
+rm -fr vendor
 
 # Require specific Sylius version
 composer require "sylius/sylius:${sylius_version}.*" --no-interaction --no-update --no-scripts
 
-# Require specific Symfony version for packages in composer.json
-# (excluding packages that are not actual Symfony components or have independent versioning)
-grep -o -E '"(symfony/[^"]+)"' composer.json \
-    | grep -v -E '(symfony/flex|symfony/webpack-encore-bundle|symfony/maker-bundle|symfony/panther|symfony/thanks|symfony/type-info)' \
-    | xargs printf '%s:'"${symfony_version}"'.* ' \
-    | xargs composer require --no-interaction --no-update
+# Global Flex applies SYMFONY_REQUIRE to all symfony/* packages, including transitive ones
+composer global config --no-plugins allow-plugins.symfony/flex true
+composer global require --no-progress --no-scripts --no-plugins symfony/flex
+
+# Sylius 2.0, 2.1 and 2.2 Behat contexts need Behat 3
+# (Sylius 2.0 conflicts with behat/gherkin ^4.13, which Behat 3.30+ requires)
+if [ "$sylius_version" = "2.0" ]; then
+    composer require --dev "behat/behat:^3.22" --no-interaction --no-update --no-scripts
+elif [[ "$sylius_version" =~ ^2\.[12]$ ]]; then
+    composer require --dev "behat/behat:^3.34" --no-interaction --no-update --no-scripts
+fi
 
 # Composer install
 composer_flag="--prefer-dist"
 if [ "$strategy" = "prefer-lowest" ]; then
     composer_flag="--prefer-lowest"
 fi
-composer update --no-interaction "${composer_flag}" --no-plugins
+SYMFONY_REQUIRE="${symfony_version}.*" composer update --no-interaction "${composer_flag}"
 
 # Clean cache
 rm -fr tests/Application/var/cache

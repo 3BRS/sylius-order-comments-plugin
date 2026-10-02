@@ -7,5 +7,3 @@ doctrine:
         server_version: '8.0.32'
         charset: UTF8
         url: '%env(resolve:DATABASE_URL)%'
-    orm:
-        enable_lazy_ghost_objects: true

@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class OrderMessageType extends AbstractResourceType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('message', TextareaType::class, [
@@ -29,7 +29,7 @@ class OrderMessageType extends AbstractResourceType
             ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'threebrs_order_message';
     }
