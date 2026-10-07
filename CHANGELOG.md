@@ -5,6 +5,7 @@
 - Add support for Sylius 2.3 and Symfony ^8.0
 - CI covers Sylius 2.0–2.2 on PHP 8.2 and 8.3 with Symfony 6.4 and 7.4, and Sylius 2.3 on PHP 8.3 with Symfony 7.4 and PHP 8.4 with Symfony 8.1
 - **BREAKING**: `OrderMessageType::buildForm()` and `OrderMessageType::getBlockPrefix()` declare the `void` and `string` return types required by Symfony 8
+- Conflict with `doctrine/orm >=3.0 <3.3.3`: Sylius 2.1 with 3.3.0–3.3.2 throws "No locale has been set" when rendering the admin order page
 
 ## Branch `2.2` — Rebrand to 3BRS
 
