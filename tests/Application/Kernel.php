@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Tests\ThreeBRS\OrderCommentsPlugin\Application;
 
 use Sylius\Bundle\CoreBundle\SyliusCoreBundle;
+use Sylius\Bundle\FixturesBundle\Command\FixturesListCommand;
+use Sylius\Bundle\FixturesBundle\Command\FixturesLoadCommand;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -45,6 +48,26 @@ final class Kernel extends BaseKernel
         foreach ($this->getConfigurationDirectories() as $confDir) {
             $this->loadRoutesConfiguration($routes, $confDir);
         }
+    }
+
+    protected function build(ContainerBuilder $container): void
+    {
+        // Sylius tags its fixtures commands without a command name, so every console run constructs them; their services
+        // load Doctrine metadata, after which the DoctrineBundle 3 metadata cache warmer fails when debug is off
+        $container->addCompilerPass(new class() implements CompilerPassInterface {
+            public function process(ContainerBuilder $container): void
+            {
+                $commands = [
+                    FixturesListCommand::class => 'sylius:fixtures:list',
+                    FixturesLoadCommand::class => 'sylius:fixtures:load',
+                ];
+                foreach ($commands as $id => $name) {
+                    if ($container->hasDefinition($id)) {
+                        $container->getDefinition($id)->clearTag('console.command')->addTag('console.command', ['command' => $name]);
+                    }
+                }
+            }
+        });
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
